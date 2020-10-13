@@ -1,0 +1,275 @@
+package th.ac.cmu.cpe.cpe406.parse;
+
+import th.ac.cmu.cpe.cpe406.ast.*;
+import th.ac.cmu.cpe.cpe406.lex.*;
+import th.ac.cmu.cpe.cpe406.util.ErrorInfo;
+import th.ac.cmu.cpe.cpe406.util.ErrorQueue;
+import th.ac.cmu.cpe.cpe406.util.Position;
+
+import java_cup.runtime.ComplexSymbolFactory;
+import java_cup.runtime.Symbol;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+parser Grm {:
+
+    protected Lexer lexer;
+    protected ErrorQueue eq;
+    protected PrintWriter parsedpw;
+
+    protected boolean parseErrorReported;
+
+    public Grm(Lexer lexer, ErrorQueue eq, PrintWriter parsedpw) {
+        this(null, new ComplexSymbolFactory());
+        this.lexer = lexer;
+        this.eq = eq;
+        this.parsedpw = parsedpw;
+    }
+
+    @Override
+    public void syntax_error(Symbol current) {
+        Token token = (Token) current.value;
+        Position p = token.getPosition();
+        String msg = "Syntax error: unexpected " + current.value + ".";
+        if (!(token instanceof LexErrorToken))
+            report_error(msg, p);
+        syntax_error_file(msg, p);
+    }
+
+    protected void syntax_error_file(String msg, Position p) {
+        if (parsedpw != null && !parseErrorReported) {
+            try (BufferedWriter bw = new BufferedWriter(parsedpw);) {
+                bw.write(p.line() + ":" + p.column() + " error:" + msg
+                        + "\n");
+            }
+            catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            parseErrorReported = true;
+        }
+    }
+
+  /**
+   * Override the default CUP routine.
+   */
+  @Override
+  public void report_error(String message, Object info) {
+    if (info instanceof Position)
+    eq.enqueue(ErrorInfo.SYNTAX_ERROR, message, (Position) info);
+    else
+    eq.enqueue(ErrorInfo.SYNTAX_ERROR, message);
+  }
+
+    /**
+     * The standard scanning routine for use in the CUP "scan with"
+     * declaration. Should read:
+     *   scan with { : return nextSymbol(); : }
+     */
+    public Symbol nextSymbol() throws java.io.IOException {
+        Token t = lexer.nextToken();
+        if (t.symbol() == sym.error) {
+            syntax_error_file("lexical error", t.getPosition());
+        }
+
+        return getSymbolFactory().newSymbol(t.toString(), t.symbol(), t);
+    }
+
+    /**
+     * Return the source position of the Node.
+     */
+    public Position pos(Node n) {
+        if (n == null) {
+            return null;
+        }
+        return n.position();
+    }
+
+    /**
+     * Return the position of the Token.
+     */
+    public Position pos(Token t) {
+        if (t == null) return null;
+        return t.getPosition();
+    }
+
+    /**
+     * Return the source position of the first element in the list to the
+     * last element in the list.
+     */
+    public Position pos(List<?> l) {
+        if (l == null || l.isEmpty()) {
+            return null;
+        }
+
+        return pos(l.get(0), l.get(l.size() - 1));
+    }
+
+    public Position pos(Object first, Object last) {
+        return pos(first, last, first);
+    }
+
+    public Position pos(Object first, Object last, Object noEndDefault) {
+        Position fpos = posForObject(first);
+        Position epos = posForObject(last);
+
+        if (fpos != null && epos != null) {
+            if (epos.endColumn() != Position.END_UNUSED) {
+                return new Position(fpos, epos);
+            }
+
+            // the end line and column are not being used in this extension.
+            // so return the default for that case.
+            return posForObject(noEndDefault);
+        }
+        if (epos == null) {
+            return posForObject(noEndDefault);
+        }
+        return null;
+
+    }
+
+    protected Position posForObject(Object o) {
+        if (o instanceof Node) {
+            return pos((Node) o);
+        }
+        else if (o instanceof Token) {
+            return pos((Token) o);
+        }
+        else if (o instanceof List) {
+            return pos((List<?>) o);
+        }
+        else {
+            return null;
+        }
+    }
+
+    protected Id id(Identifier id) {
+        return new Id_c(pos(id), id.getIdentifier());
+    }
+:};
+
+scan with {: return nextSymbol(); :};
+
+terminal Token INT, CHAR;
+terminal Identifier IDENTIFIER;
+
+terminal IntegerLiteral INTEGER_LITERAL, INTEGER_LITERAL_BD;
+terminal CharacterLiteral CHARACTER_LITERAL;
+terminal BooleanLiteral BOOLEAN_LITERAL;
+terminal StringLiteral STRING_LITERAL;
+
+terminal COLON, SEMICOLON;
+terminal EQ;
+
+nonterminal Program program;
+nonterminal LocalDecl var_decl;
+
+nonterminal TypeNode type;
+nonterminal TypeNode primitive_type;
+
+nonterminal List<Stmt> stmt_list_opt, stmt_list;
+nonterminal semicolon_opt;
+nonterminal Stmt stmt;
+nonterminal Stmt var_decl_stmt;
+nonterminal TypeNode var_decl_type;
+nonterminal Stmt assignment_stmt;
+nonterminal Expr lvalue, primary;
+
+nonterminal Expr expr;
+
+start with program;
+
+program ::=
+    stmt_list_opt:stmts {:
+        RESULT = new Program_c(parser.pos(stmts), lexer.file(), stmts);
+    :}
+;
+
+var_decl ::=
+    IDENTIFIER:id COLON type:type {:
+        RESULT = new LocalDecl_c(parser.pos(id, type), parser.id(id), type);
+    :}
+;
+
+type ::=
+    primitive_type:type {:
+        RESULT = type;
+    :}
+;
+
+primitive_type ::=
+    INT:i {:
+        RESULT = new PrimitiveTypeNode_c(parser.pos(i), PrimitiveTypeNode.Kind.INT);
+    :}
+;
+
+stmt_list_opt ::=
+    /* empty */ {:
+        RESULT = Collections.emptyList();
+    :}
+    | stmt_list:l {:
+        RESULT = l;
+    :}
+;
+
+stmt_list ::=
+    stmt:s {:
+        List<Stmt> l = new LinkedList<>();
+        l.add(s);
+        RESULT = l;
+    :}
+    | stmt_list:l stmt:s {:
+        l.add(s);
+        RESULT = l;
+    :}
+;
+
+stmt ::=
+    var_decl_stmt:d SEMICOLON {:
+        RESULT = d;
+    :}
+    | assignment_stmt:a SEMICOLON {:
+        RESULT = a;
+    :}
+;
+
+var_decl_stmt ::=
+    var_decl:decl {:
+        RESULT = decl;
+    :}
+;
+
+var_decl_type ::=
+    primitive_type:type {:
+        RESULT = type;
+    :}
+;
+
+assignment_stmt ::=
+    lvalue:l EQ expr:r {:
+        RESULT = new Assign_c(parser.pos(l, r), l ,r);
+    :}
+;
+
+lvalue ::=
+    IDENTIFIER:id {:
+        RESULT = new Variable_c(parser.pos(id), parser.id(id));
+    :}
+;
+
+expr ::=
+    IDENTIFIER:id {:
+        RESULT = new Variable_c(parser.pos(id), parser.id(id));
+    :}
+    |
+    INTEGER_LITERAL:a {:
+        RESULT = new IntLit_c(parser.pos(a), a.getValue().intValue());
+    :}
+;
