@@ -1,0 +1,11 @@
+<project name="261406-main" default="default" basedir="."
+	xmlns:if="ant:if"
+	xmlns:unless="ant:unless"
+>
+    <description>
+        261406 build file
+    </description>
+
+    <import file="build-common.xml" />
+
+</project>

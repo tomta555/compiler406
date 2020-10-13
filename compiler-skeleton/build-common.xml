@@ -1,0 +1,73 @@
+<project name="261406-common" default="default" basedir="."
+	xmlns:if="ant:if"
+	xmlns:unless="ant:unless"
+>
+    <description>
+        xic build file
+    </description>
+
+    <!-- directory for jar files -->
+    <property name="lib" location="${basedir}/lib"/>
+
+    <import file="build-261406.xml" />
+
+    <!-- create appropriate executables in the bin directory -->
+    <target name="bin" depends="configure" unless="bin.up-to-date">
+        <chmod perm="+x" file="xic"/>
+        <property name="bin.up-to-date" value="true"/>
+    </target>
+
+    <!-- generate lexer source -->
+    <target name="lexer"
+            depends="bin,init"
+            description="Build the lexer">
+        <antcall target="jflex-lexer">
+            <param name="lexer.dir" value="${src}/th/ac/cmu/cpe/cpe406/lex"/>
+            <param name="lexer.class" value="Lexer_c"/>
+            <param name="jflex.file" value="lexer-spec.flex"/>
+        </antcall>
+    </target>
+
+    <target name="parser"
+            depends="bin,init,lexer"
+            description="Build the parser">
+        <!-- generate parser source -->
+        <antcall target="cup-parser">
+            <param name="parser.dir" value="${src}/th/ac/cmu/cpe/cpe406/parse"/>
+            <param name="cup.file" value="parser-spec.cup"/>
+            <param name="parser.class" value="Grm"/>
+            <param name="symbol.class" value="sym"/>
+        </antcall>
+    </target>
+
+    <!-- compile the compiler -->
+    <target name="compile" depends="init,parser"
+            description="Build the compiler">
+        <javac source="14"
+                target="14"
+                srcdir="${src}"
+                destdir="${classes}"
+                debug="on"
+                includes="th/ac/cmu/cpe/cpe406/**"
+                includeantruntime="false">
+            <classpath refid="standard.classpath"/>
+        </javac>
+    </target>
+
+    <target name="clobber"
+            depends="clean"
+            description="Cleans up the directory tree and deletes generated files">
+        <delete>
+            <fileset dir="${src}">
+                <include name="th/ac/cmu/cpe/cpe406/parse/Grm.java"/>
+                <include name="th/ac/cmu/cpe/cpe406/parse/sym.java"/>
+                <include name="th/ac/cmu/cpe/cpe406/lex/Lexer_c.java"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <!-- build the compiler -->
+    <target name="default"
+            depends="bin,compile"/>
+
+</project>

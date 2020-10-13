@@ -1,0 +1,161 @@
+<project name="261406" default="init" basedir="."
+    xmlns:if="ant:if"
+    xmlns:unless="ant:unless"
+>
+    <description>
+        261406 Generic Build File
+    </description>
+
+    <!-- read local definitions that override this file, if any -->
+    <property file="config.properties"/>
+
+    <!-- source directory -->
+    <property name="src" location="${basedir}/src"/>
+
+    <!-- directory for class file targets -->
+    <property name="classes" location="${basedir}/classes"/>
+
+    <!-- directory for jar files -->
+    <property name="lib" location="${basedir}/../lib"/>
+
+    <!-- binaries directory -->
+    <property name="bin" location="${basedir}/bin"/>
+
+    <!-- temporary directory -->
+    <property name="tmp" location="${basedir}/tmp"/>
+
+    <!-- classpath to use when compiling -->
+    <path id="standard.classpath">
+        <pathelement location="${classes}"/>
+        <pathelement location="${lib}/java_cup.jar"/>
+        <pathelement location="${lib}/jflex.jar"/>
+        <pathelement location="${lib}/itextpdf-5.5.8.jar"/>
+        <pathelement location="${env.JAVA_HOME}/lib/tools.jar"/>
+    </path>
+
+    
+    <target name="check-jars">
+        <available file="${lib}/jflex.jar" property="jflex.jar.exists"/>
+        <fail unless="jflex.jar.exists"
+                message="${lib}/jflex.jar not found."/>
+        <available file="${lib}/java_cup.jar" property="cup.jar.exists"/>
+        <fail unless="cup.jar.exists"
+                message="${lib}/java_cup.jar not found."/>
+    </target>
+
+    <target name="configure"
+            description="Check the build configuration"
+            depends="check-jars"
+            unless="configure.up-to-date">
+        <echo message="java version is ${java.version}"/>
+        <echo message="current directory is ${user.dir}"/>
+        <echo message="Java home directory is ${java.home}"/>
+        <property name="configure.up-to-date" value="true"/>
+    </target>
+
+    <!-- initialize the build -->
+    <target name="init" depends="configure">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <!-- Create the build directory structure used by compile -->
+        <antcall target="mkdirs"/>
+    </target>
+
+    <target name="mkdirs">
+        <mkdir dir="${classes}"/>
+    </target>
+
+    <!-- Build a JFlex lexer based on parameters supplied to the target.
+       @param lexer.dir     The directory, relative to $basedir, in which
+                            the JFlex file is located.
+       @param lexer.class   The name of the lexer as declared with %class
+                            in the JFlex file.
+       @param jflex.file    The name of the JFlex file.
+    -->
+    <target name="jflex-lexer"
+            depends="jflex-lexer-deps"
+            unless="jflex-lexer.up-to-date">
+        <java classname="jflex.Main"
+                fork="true"
+                dir="${lexer.dir}"
+                failonerror="true">
+            <classpath refid="standard.classpath"/>
+            <arg value="--noinputstreamctor"/>
+            <arg value="${jflex.file}"/>
+        </java>
+    </target>
+
+    <!-- Set the property jflex-lexer.up-to-date if the lexer is in fact
+       up to date.  Called by the jflex.lexer target.
+    -->
+    <target name="jflex-lexer-deps">
+        <dependset>
+            <srcfileset dir="${lexer.dir}" includes="${jflex.file}"/>
+            <targetfileset dir="${lexer.dir}" includes="${lexer.class}.java"/>
+        </dependset>
+        <available property="jflex-lexer.up-to-date"
+                file="${lexer.dir}/${lexer.class}.java"/>
+    </target>
+
+    <!-- Set the property cup-parser.up-to-date if the parser is in fact
+       up to date.  Called by the cup-parser-using-jar target.
+   -->
+    <target name="cup-parser-deps">
+        <dependset>
+            <srcfileset dir="${parser.dir}" includes="${cup.file}"/>
+            <targetfileset dir="${parser.dir}">
+                <include name="${parser.class}.java"/>
+                <include name="${symbol.class}.java"/>
+            </targetfileset>
+        </dependset>
+        <uptodate property="cup-parser.up-to-date">
+            <srcfiles dir="${lib}" includes="java_cup.jar"/>
+            <srcfiles dir="${parser.dir}" includes="${cup.file}"/>
+            <compositemapper>
+                <mergemapper to="${parser.dir}/${parser.class}.java"/>
+                <mergemapper to="${parser.dir}/${symbol.class}.java"/>
+            </compositemapper>
+        </uptodate>
+    </target>
+
+    <!-- Build a CUP parser based on parameters supplied to the target.
+       @param parser.dir    The directory, relative to $basedir, in which
+                            the CUP file is located.
+       @param parser.class  The name to be passed to CUP with -parser.
+       @param symbol.class  The name to be passed to CUP with -symbols.
+       @param cup.file      The name of the CUP file.
+   -->
+    <target name="cup-parser"
+            depends="cup-parser-deps"
+            unless="cup-parser.up-to-date">
+        <java classname="java_cup.Main"
+                fork="true"
+                dir="${parser.dir}"
+                failonerror="true">
+            <classpath refid="standard.classpath"/>
+            <arg value="-nopositions"/>
+            <arg value="-parser"/>
+            <arg value="${parser.class}"/>
+            <arg value="-symbols"/>
+            <arg value="${symbol.class}"/>
+            <arg value="${cup.file}"/>
+        </java>
+    </target>
+
+    <!-- Delete the ${classes} directory tree -->
+    <target name="clean"
+            description="Cleans up the directory tree: deletes the the classes directories">
+        <delete dir="${classes}" includeemptydirs="true" failonerror="false"/>
+        <delete dir="${tmp}"
+                includeemptydirs="true"
+                failonerror="false"/>
+        <antcall target="mkdirs"/>
+    </target>
+
+    <target name="clobber"
+            depends="clean"
+            description="Cleans up the directory tree and deletes generated files">
+        <delete>
+        </delete>
+    </target>
+</project>
