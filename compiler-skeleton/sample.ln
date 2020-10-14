@@ -1,3 +1,6 @@
-x:int;
+x:boolean;
 y:int;
-x = -x;
+z:int;
+y = -3+5-6*8+9--3+-8-(-5);
+x = true+3;
+z = 5==2;

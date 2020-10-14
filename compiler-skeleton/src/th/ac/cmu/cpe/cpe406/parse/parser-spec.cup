@@ -157,7 +157,9 @@ parser Grm {:
 
 scan with {: return nextSymbol(); :};
 
-terminal Token INT, CHAR;
+terminal Token INT, BOOLEAN;
+terminal Token PLUS, MINUS, MULT, DIV, MOD;
+terminal Token LPAREN, RPAREN;
 terminal Identifier IDENTIFIER;
 
 terminal IntegerLiteral INTEGER_LITERAL, INTEGER_LITERAL_BD;
@@ -167,6 +169,8 @@ terminal StringLiteral STRING_LITERAL;
 
 terminal COLON, SEMICOLON;
 terminal EQ;
+terminal EQEQ, LTEQ, GTEQ, NOTEQ;
+terminal LT, GT;
 
 nonterminal Program program;
 nonterminal LocalDecl var_decl;
@@ -182,7 +186,8 @@ nonterminal TypeNode var_decl_type;
 nonterminal Stmt assignment_stmt;
 nonterminal Expr lvalue, primary;
 
-nonterminal Expr expr;
+nonterminal Expr expr, add_expr, mul_expr, lit_expr, bool_expr;
+nonterminal Expr equality_expr, relational_expr;
 
 start with program;
 
@@ -208,6 +213,9 @@ primitive_type ::=
     INT:i {:
         RESULT = new PrimitiveTypeNode_c(parser.pos(i), PrimitiveTypeNode.Kind.INT);
     :}
+    |BOOLEAN:b {:
+		RESULT = new PrimitiveTypeNode_c(parser.pos(b), PrimitiveTypeNode.Kind.BOOL);
+	:}
 ;
 
 stmt_list_opt ::=
@@ -265,10 +273,68 @@ lvalue ::=
 ;
 
 expr ::=
-    IDENTIFIER:id {:
+	equality_expr: e {:
+		RESULT = e;
+	:}
+;
+
+equality_expr ::=
+    equality_expr:l EQEQ add_expr:r {:
+        RESULT = new Equal_c(parser.pos(l, r), l ,r);
+    :}
+    |add_expr:e {:
+		RESULT = e;
+	:}
+	|bool_expr:e {:
+		RESULT = e;
+	:}
+;	
+
+add_expr ::=
+	add_expr:l PLUS mul_expr:r {:
+		RESULT = new Add_c(parser.pos(l, r), l, r);
+	:}
+	|add_expr:l MINUS mul_expr:r {:
+		RESULT = new Sub_c(parser.pos(l, r), l, r);
+	:}
+	|mul_expr:r {:
+		RESULT = r;
+	:}
+;
+
+mul_expr ::= 
+	mul_expr:l MULT lit_expr:r {:
+		RESULT = new Mul_c(parser.pos(l, r), l, r);
+	:}
+	|mul_expr:l DIV lit_expr:r {:
+		RESULT = new Div_c(parser.pos(l, r), l, r);
+	:}
+	|mul_expr:l MOD lit_expr:r {:
+		RESULT = new Mod_c(parser.pos(l, r), l, r);
+	:}
+	|lit_expr:r {:
+		RESULT = r;
+	:}
+;
+
+lit_expr ::=
+	MINUS:m lit_expr:r {:
+		RESULT = new Unary_c(parser.pos(m, r), r);
+	:}
+	|IDENTIFIER:id {:
         RESULT = new Variable_c(parser.pos(id), parser.id(id));
     :}
     |INTEGER_LITERAL:a {:
         RESULT = new IntLit_c(parser.pos(a), a.getValue().intValue());
     :}
+    |LPAREN expr:e RPAREN {:
+		RESULT = e;
+	:}
 ;
+
+bool_expr ::=
+	BOOLEAN_LITERAL:a {: 
+		RESULT = new BooleanLit_c(parser.pos(a), a.getValue().booleanValue()); 
+	:}
+;
+	

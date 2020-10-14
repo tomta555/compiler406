@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="compiler-skeleton/src"/>
+	<classpathentry kind="lib" path="compiler-skeleton/lib/java_cup.jar"/>
+	<classpathentry kind="lib" path="compiler-skeleton/lib/jflex.jar"/>
+	<classpathentry kind="output" path="compiler-skeleton/classes"/>
+</classpath>

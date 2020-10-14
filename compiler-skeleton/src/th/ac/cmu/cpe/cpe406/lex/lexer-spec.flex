@@ -63,6 +63,7 @@ import java.util.Set;
 
     protected void init_keywords() {
         keywords.put("int",           sym.INT);
+        keywords.put("boolean",       sym.BOOLEAN);
     }
 
     @Override
@@ -204,6 +205,9 @@ Identifier = [:letter:] ([:jletter:] | [:digit:] | \')*
 /* Integer Literals */
 DecimalNumeral = 0 | [1-9][0-9]*
 
+ExponentPart = [eE] {SignedInteger}
+SignedInteger = [-+]? [0-9]+
+
 %%
 
 <YYINITIAL> {
@@ -219,14 +223,28 @@ DecimalNumeral = 0 | [1-9][0-9]*
     {Identifier}   { Integer i = keywords.get(yytext());
                      if (i == null) return id();
                      else return key(i.intValue()); }
-
+                     
     /* Separators */
-    ":"    { return op(sym.COLON); }
+    ":"    { return op(sym.COLON); 	   }
     ";"    { return op(sym.SEMICOLON); }
+    "("    { return op(sym.LPAREN);    }
+    ")"    { return op(sym.RPAREN);    }
+    
 
     /* Operators */
     "="    { return op(sym.EQ);         }
+	"+"    { return op(sym.PLUS);       }
+	"-"    { return op(sym.MINUS);      }
+	"*"    { return op(sym.MULT);       }
+	"/"    { return op(sym.DIV);        }
+	"%"    { return op(sym.MOD);        }
+    "=="   { return op(sym.EQEQ);       }
+	
 
+    /* Boolean Literals */
+    "true"  { return boolean_lit(true);  }
+    "false" { return boolean_lit(false); }
+	
     /* Integer Literals */
     {DecimalNumeral}             { return int_lit(yytext(), 10); }
 
