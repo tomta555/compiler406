@@ -284,6 +284,9 @@ assignment_stmt ::=
     lvalue:l EQ expr:r {:
         RESULT = new Assign_c(parser.pos(l, r), l ,r);
     :}
+    |lvalue:l1 COMMA lvalue:r1 EQ lvalue:l2 COMMA lvalue:r2 {:
+        RESULT = new Swap_c(parser.pos(l1, r2), l2, r2);
+    :}    
 ;
 
 lvalue ::=

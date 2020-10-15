@@ -11,3 +11,4 @@ a=s<d;
 s=s==d;
 g=true|e;
 z = 1**5;
+z, y = y, z;
