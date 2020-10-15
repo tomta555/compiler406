@@ -1,5 +1,5 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
-public interface BooleanLit {
+public interface Pow extends Binary {
 
 }

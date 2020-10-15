@@ -62,8 +62,13 @@ import java.util.Set;
     }
 
     protected void init_keywords() {
-        keywords.put("int",           sym.INT);
-        keywords.put("boolean",       sym.BOOLEAN);
+        keywords.put("int",  	sym.INT		);
+        keywords.put("bool", 	sym.BOOLEAN	);
+        keywords.put("if",      sym.IF		);
+        keywords.put("else",    sym.ELSE	);
+        keywords.put("while",   sym.WHILE	);
+        keywords.put("return",  sym.RETURN	);
+        keywords.put("length",  sym.LENGTH	);
     }
 
     @Override
@@ -226,9 +231,15 @@ SignedInteger = [-+]? [0-9]+
                      
     /* Separators */
     ":"    { return op(sym.COLON); 	   }
+    ","    { return op(sym.COMMA);     }
     ";"    { return op(sym.SEMICOLON); }
     "("    { return op(sym.LPAREN);    }
     ")"    { return op(sym.RPAREN);    }
+    "{"    { return op(sym.LBRACE);    }
+    "}"    { return op(sym.RBRACE);    }
+    "["    { return op(sym.LBRACK);    }
+    "]"    { return op(sym.RBRACK);    }
+    
     
 
     /* Operators */
@@ -236,9 +247,20 @@ SignedInteger = [-+]? [0-9]+
 	"+"    { return op(sym.PLUS);       }
 	"-"    { return op(sym.MINUS);      }
 	"*"    { return op(sym.MULT);       }
+	"**"   { return op(sym.POW);        }
 	"/"    { return op(sym.DIV);        }
 	"%"    { return op(sym.MOD);        }
     "=="   { return op(sym.EQEQ);       }
+    ">"    { return op(sym.GT);         }
+    "<"    { return op(sym.LT);         }
+    "!"    { return op(sym.NOT);        }
+    "=="   { return op(sym.EQEQ);       }
+    "<="   { return op(sym.LTEQ);       }
+    ">="   { return op(sym.GTEQ);       }
+    "!="   { return op(sym.NOTEQ);      }
+    "&"   { return op(sym.AND);     	}
+    "|"   { return op(sym.OR);			}
+    
 	
 
     /* Boolean Literals */

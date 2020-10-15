@@ -2,7 +2,7 @@ package th.ac.cmu.cpe.cpe406.ast;
 
 import th.ac.cmu.cpe.cpe406.util.Position;
 
-public class Unary_c extends Expr_c implements Unary{
+public abstract class Unary_c extends Expr_c implements Unary{
 
 	protected Expr expr;
 	

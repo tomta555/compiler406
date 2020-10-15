@@ -1,5 +1,5 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
-public interface Div {
+public interface Div extends Binary {
 
 }

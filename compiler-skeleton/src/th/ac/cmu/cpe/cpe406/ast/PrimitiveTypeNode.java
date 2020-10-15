@@ -12,7 +12,7 @@ public interface PrimitiveTypeNode extends TypeNode {
             case INT:
                 return "int";
             case BOOL:
-            	return "boolean";
+            	return "bool";
             }
             throw new InternalCompilerError("Unknown primitive type");
         }
