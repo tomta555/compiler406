@@ -179,7 +179,7 @@ terminal CharacterLiteral CHARACTER_LITERAL;
 terminal BooleanLiteral BOOLEAN_LITERAL;
 terminal StringLiteral STRING_LITERAL;
 
-terminal COLON, SEMICOLON,COMMA;
+terminal Token COLON, SEMICOLON, COMMA;
 
 
 nonterminal Program program;
@@ -190,10 +190,12 @@ nonterminal TypeNode primitive_type;
 
 nonterminal List<Stmt> stmt_list_opt, stmt_list;
 nonterminal semicolon_opt;
-nonterminal Stmt stmt;
+nonterminal Stmt stmt, stmt_no_short_if, statement_without_trailing_substatement;
+nonterminal Empty empty_statement;
 nonterminal Stmt var_decl_stmt;
 nonterminal TypeNode var_decl_type;
 nonterminal Stmt assignment_stmt;
+nonterminal Stmt if_then_stmt, if_then_stmt_no_paren, if_then_else_stmt, if_then_else_statement_no_short_if;
 nonterminal Expr lvalue, primary, expr, left_id, right_expr;
 nonterminal Expr logical_or_expr, logical_and_expr;
 nonterminal Expr equality_expr, comparison_expr;
@@ -262,9 +264,68 @@ stmt ::=
     var_decl_stmt:d SEMICOLON {:
         RESULT = d;
     :}
-    | assignment_stmt:a SEMICOLON {:
+    | if_then_stmt:a {:
+		RESULT = a;
+	:}
+	| if_then_else_stmt:a {:
+		RESULT = a;
+	:}
+	| statement_without_trailing_substatement:a {:
+		RESULT = a;
+	:}
+;
+
+if_then_stmt ::= 
+	IF:n LPAREN expr:e RPAREN stmt:s {:
+		RESULT = new If_c(parser.pos(n, s), e, s);
+	:}  
+  /*| if_then_stmt_no_paren:a {:
+		RESULT = a; 
+	:} */
+;
+
+/*if_then_stmt_no_paren ::=
+	IF:n expr:e stmt:s {:
+		RESULT = new If_c(parser.pos(n, s), e, s);
+	:}
+;*/
+
+if_then_else_stmt ::= 
+	IF:n LPAREN expr:a RPAREN stmt_no_short_if:b ELSE stmt:c {:
+		RESULT = new If_c(parser.pos(n, c), a, b, c);
+	:}
+;
+stmt_no_short_if ::=
+	if_then_else_statement_no_short_if:a {:
+		RESULT = a; 
+	:}
+	|statement_without_trailing_substatement:a {:
+		RESULT = a; 
+	:}
+;
+
+if_then_else_statement_no_short_if ::=
+	IF:n LPAREN expr:a RPAREN stmt_no_short_if:b ELSE stmt_no_short_if:c {: 
+		RESULT = new If_c(parser.pos(n, c), a, b, c); 
+	:}
+;
+statement_without_trailing_substatement ::=
+	/*block:a {: 
+		RESULT = a; 
+	:} |*/
+    empty_statement:a {: 
+		RESULT = a; 
+	:}
+	| assignment_stmt:a SEMICOLON {:
         RESULT = a;
     :}
+;
+
+empty_statement ::=
+                    // Empty
+	SEMICOLON:a {: 
+		RESULT = new Empty_c(parser.pos(a)); 
+	:}
 ;
 
 var_decl_stmt ::=
