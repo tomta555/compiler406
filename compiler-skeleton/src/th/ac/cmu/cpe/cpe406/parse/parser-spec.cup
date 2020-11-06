@@ -199,6 +199,8 @@ nonterminal Expr logical_or_expr, logical_and_expr;
 nonterminal Expr equality_expr, comparison_expr;
 nonterminal Expr add_sub_expr, mul_div_expr, expo_expr;
 nonterminal Expr neg_expr;
+nonterminal Stmt while_stmt;
+
 
 /* Precedences */
 precedence left PLUS, MINUS;
@@ -265,6 +267,20 @@ stmt ::=
     | assignment_stmt:a SEMICOLON {:
         RESULT = a;
     :}
+    | while_stmt:w {:
+		RESULT = w;
+	:}
+;
+
+
+while_stmt ::=
+	WHILE:n expr:e stmt:s {:
+		RESULT = new While_c(parser.pos(n,e),e,s);
+	:}	
+	/*|WHILE:n LPAREN expr:e RPAREN stmt:s{:
+		RESULT = new While(parser.pos(n,e),e,s);
+	:}
+	*/
 ;
 
 var_decl_stmt ::=
