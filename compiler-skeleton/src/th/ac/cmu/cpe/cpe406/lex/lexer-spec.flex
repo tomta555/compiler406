@@ -68,7 +68,7 @@ import java.util.Set;
         keywords.put("else",    sym.ELSE	);
         keywords.put("while",   sym.WHILE	);
         keywords.put("return",  sym.RETURN	);
-        keywords.put("len",  sym.LENGTH	);
+        keywords.put("len",     sym.LENGTH	);
     }
 
     @Override
@@ -258,8 +258,8 @@ SignedInteger = [-+]? [0-9]+
     "<="   { return op(sym.LTEQ);       }
     ">="   { return op(sym.GTEQ);       }
     "!="   { return op(sym.NOTEQ);      }
-    "&"   { return op(sym.AND);     	}
-    "|"   { return op(sym.OR);			}
+    "&"    { return op(sym.AND);     	}
+    "|"    { return op(sym.OR);			}
     
 	
 
