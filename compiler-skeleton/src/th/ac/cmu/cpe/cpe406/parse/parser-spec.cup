@@ -192,11 +192,19 @@ nonterminal List<Stmt> stmt_list_opt, stmt_list;
 nonterminal semicolon_opt;
 nonterminal Stmt stmt, stmt_no_short_if, statement_without_trailing_substatement;
 nonterminal Empty empty_statement;
+nonterminal Return return_statement;
+nonterminal Block block;
+nonterminal List<Stmt> block_statements_opt, block_statements;
+nonterminal List<Stmt> block_statement;
+/*nonterminal List<LocalDecl> local_variable_declaration_statement; */
 nonterminal Stmt var_decl_stmt;
 nonterminal TypeNode var_decl_type;
 nonterminal Stmt assignment_stmt;
 nonterminal Stmt if_then_stmt, if_then_stmt_no_paren, if_then_else_stmt, if_then_else_statement_no_short_if;
-nonterminal Expr lvalue, primary, expr, left_id, right_expr;
+nonterminal Expr primary, expr;
+nonterminal Variable lvalue;
+nonterminal List<Variable> left_id;
+nonterminal List<Expr> right_expr;
 nonterminal Expr logical_or_expr, logical_and_expr;
 nonterminal Expr equality_expr, comparison_expr;
 nonterminal Expr add_sub_expr, mul_div_expr, expo_expr;
@@ -236,7 +244,7 @@ primitive_type ::=
     INT:i {:
         RESULT = new PrimitiveTypeNode_c(parser.pos(i), PrimitiveTypeNode.Kind.INT);
     :}
-    |BOOLEAN:b {:
+    | BOOLEAN:b {:
 		RESULT = new PrimitiveTypeNode_c(parser.pos(b), PrimitiveTypeNode.Kind.BOOL);
 	:}
 ;
@@ -263,7 +271,10 @@ stmt_list ::=
 ;
 
 stmt ::=
-    var_decl_stmt:d SEMICOLON {:
+	statement_without_trailing_substatement:a {:
+		RESULT = a;
+	:}
+    | var_decl_stmt:d SEMICOLON {:
         RESULT = d;
     :}
     | if_then_stmt:a {:
@@ -272,10 +283,63 @@ stmt ::=
 	| if_then_else_stmt:a {:
 		RESULT = a;
 	:}
-	| statement_without_trailing_substatement:a {:
-		RESULT = a;
+	| while_stmt:w {:
+		RESULT = w;
+	:}
+	| error SEMICOLON:a
+            {: RESULT = new Empty_c(parser.pos(a)); 
+	:}	
+;
+
+block ::=
+                    // Block
+	LBRACE:n block_statements_opt:a RBRACE:d {:
+ 		RESULT = new Block_c(parser.pos(n, d), a); 
 	:}
 ;
+
+block_statements_opt ::=
+                    // List of Stmt
+    {: RESULT = new LinkedList<>(); :}
+    | block_statements:a {: 
+		RESULT = a; 
+	:}
+    | error {:
+ 		RESULT = Collections.<Stmt> emptyList(); 
+	:}
+;
+
+block_statements ::=
+                    // List of Stmt
+    block_statement:a {: 
+		List<Stmt> l = new LinkedList<>();
+        l.addAll(a);
+        RESULT = l; 
+	:}
+    | block_statements:a block_statement:b {: 
+		RESULT = a;
+        a.addAll(b); 
+	:}
+;
+
+block_statement ::=
+                    // List of Stmt
+    /*local_variable_declaration_statement:a {:
+		RESULT = new LinkedList<Stmt>(a); 
+	:}*/
+    stmt:a {: 
+		List<Stmt> l = new LinkedList<>();
+        l.add(a);
+        RESULT = l; 
+	:}
+;
+
+/*local_variable_declaration_statement ::=
+                    // List of LocalDecl
+	var_decl_stmt:a SEMICOLON {: 
+		RESULT = a; 
+	:}
+;*/
 
 if_then_stmt ::= 
 	IF:n LPAREN expr:e RPAREN stmt:s {:
@@ -312,29 +376,25 @@ if_then_else_statement_no_short_if ::=
 	:}
 ;
 statement_without_trailing_substatement ::=
-	/*block:a {: 
+	block:a {: 
 		RESULT = a; 
-	:} |*/
-    empty_statement:a {: 
+	:} 
+	| empty_statement:a {: 
 		RESULT = a; 
 	:}
 	| assignment_stmt:a SEMICOLON {:
         RESULT = a;
     :}
-    | while_stmt:w {:
-		RESULT = w;
-	:}
 ;
-
 
 while_stmt ::=
 	WHILE:n expr:e stmt:s {:
 		RESULT = new While_c(parser.pos(n,e),e,s);
 	:}	
 	/*|WHILE:n LPAREN expr:e RPAREN stmt:s{:
-		RESULT = new While(parser.pos(n,e),e,s);
-	:}
-	*/
+		RESULT = new While_c(parser.pos(n,e),e,s);
+	:}*/
+	
 ;
 
 empty_statement ::=
@@ -344,6 +404,12 @@ empty_statement ::=
 	:}
 ;
 
+/*return_statement ::=
+                    // Return
+        RETURN:n expression_opt:a SEMICOLON:d
+            {: RESULT = parser.nf.Return(parser.pos(n, d), a); :}
+;*/
+    
 var_decl_stmt ::=
     var_decl:decl {:
         RESULT = decl;
@@ -363,20 +429,26 @@ assignment_stmt ::=
 ;
 
 left_id ::=
-	lvalue:l COMMA left_id:r {:
-		RESULT = new Left_id_c(parser.pos(l, r), l, r);
+	lvalue:l {:
+		List<Variable> id_list = new LinkedList<>();
+		id_list.add(l);
+		RESULT = id_list;
 	:}
-	|lvalue:l {:
-		RESULT = l;
+	| lvalue:l COMMA left_id:r {:
+        r.add(l);
+        RESULT = r;
 	:}
 ;
 
 right_expr ::=
-	expr:l COMMA right_expr:r {:
-		RESULT = new Right_expr_c(parser.pos(l, r), l, r);
+	expr:e {:
+		List<Expr> expr_list = new LinkedList<>();
+		expr_list.add(e);
+		RESULT = expr_list;
 	:}
-	|expr:e {:
-		RESULT = e;
+	| expr:l COMMA right_expr:r {:
+        r.add(l);
+        RESULT = r;
 	:}
 ;
 
