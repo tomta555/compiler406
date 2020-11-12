@@ -1,5 +1,6 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
+import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.util.Position;
 import java.util.List;
 
@@ -12,4 +13,8 @@ public class Block_c extends Stmt_c implements Block {
         this.statements = statements;
     }
 
+	public void typeCheck(SymTable sym) {
+//		for (Stmt s:statements)
+//			s.typeCheck(sym);
+	}		
 }

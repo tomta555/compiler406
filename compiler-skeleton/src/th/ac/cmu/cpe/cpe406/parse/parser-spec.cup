@@ -342,7 +342,7 @@ block_statement ::=
 ;*/
 
 if_then_stmt ::= 
-	IF:n LPAREN expr:e RPAREN stmt:s {:
+	IF:n expr:e stmt:s {:
 		RESULT = new If_c(parser.pos(n, s), e, s);
 	:}  
   /*| if_then_stmt_no_paren:a {:
@@ -357,7 +357,7 @@ if_then_stmt ::=
 ;*/
 
 if_then_else_stmt ::= 
-	IF:n LPAREN expr:a RPAREN stmt_no_short_if:b ELSE stmt:c {:
+	IF:n expr:a stmt_no_short_if:b ELSE stmt:c {:
 		RESULT = new If_c(parser.pos(n, c), a, b, c);
 	:}
 ;
@@ -371,7 +371,7 @@ stmt_no_short_if ::=
 ;
 
 if_then_else_statement_no_short_if ::=
-	IF:n LPAREN expr:a RPAREN stmt_no_short_if:b ELSE stmt_no_short_if:c {: 
+	IF:n expr:a stmt_no_short_if:b ELSE stmt_no_short_if:c {: 
 		RESULT = new If_c(parser.pos(n, c), a, b, c); 
 	:}
 ;
