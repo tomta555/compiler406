@@ -1,6 +1,7 @@
 package th.ac.cmu.cpe.cpe406.types;
 
-public abstract class Type_c implements Type {
+public class BoolType_c extends Type_c implements BoolType {
+
 	@Override
 	public boolean isInt() {
 		return false;
@@ -8,6 +9,7 @@ public abstract class Type_c implements Type {
 
 	@Override
 	public boolean isBool() {
-		return false;
+		return true;
 	}
+
 }

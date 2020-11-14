@@ -1,5 +1,8 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
+import th.ac.cmu.cpe.cpe406.types.IntType_c;
+import th.ac.cmu.cpe.cpe406.types.SymTable;
+import th.ac.cmu.cpe.cpe406.types.*;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
 public abstract class Binary_c extends Expr_c implements Binary{
@@ -11,4 +14,5 @@ public abstract class Binary_c extends Expr_c implements Binary{
 		this.l = l;
 		this.r = r;
 	}
+
 }

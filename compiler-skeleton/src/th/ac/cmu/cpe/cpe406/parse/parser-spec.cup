@@ -167,11 +167,11 @@ terminal Token POW;
 terminal Token NOT;
 terminal Token EQ;
 terminal Token LPAREN, RPAREN, LBRACK, RBRACK, LBRACE, RBRACE;
-terminal Token IF, ELSE; // if_then_statement, if_then_else_statement
-terminal Token WHILE; // while_statement, do_statement
+terminal Token IF, ELSE; 
+terminal Token WHILE;
 terminal Token RETURN;
 terminal Token LENGTH;
-
+terminal Token DEF;
 terminal Identifier IDENTIFIER;
 
 terminal IntegerLiteral INTEGER_LITERAL, INTEGER_LITERAL_BD;
@@ -189,28 +189,32 @@ nonterminal TypeNode type;
 nonterminal TypeNode primitive_type;
 
 nonterminal List<Stmt> stmt_list_opt, stmt_list;
-nonterminal semicolon_opt;
-nonterminal Stmt stmt, stmt_no_short_if, statement_without_trailing_substatement;
+nonterminal Stmt stmt, stmt_for_if_with_else, statement_without_trailing_substatement;
 nonterminal Empty empty_statement;
-nonterminal Return return_statement;
+nonterminal Stmt return_statement;
 nonterminal Block block;
 nonterminal List<Stmt> block_statements_opt, block_statements;
 nonterminal List<Stmt> block_statement;
-/*nonterminal List<LocalDecl> local_variable_declaration_statement; */
 nonterminal Stmt var_decl_stmt;
 nonterminal TypeNode var_decl_type;
 nonterminal Stmt assignment_stmt;
-nonterminal Stmt if_then_stmt, if_then_stmt_no_paren, if_then_else_stmt, if_then_else_statement_no_short_if;
+nonterminal Stmt if_then_stmt, if_then_else_stmt, if_then_with_else;
 nonterminal Expr primary, expr;
 nonterminal Variable lvalue;
 nonterminal List<Variable> left_id;
 nonterminal List<Expr> right_expr;
+nonterminal Expr func_and_array;
 nonterminal Expr logical_or_expr, logical_and_expr;
 nonterminal Expr equality_expr, comparison_expr;
 nonterminal Expr add_sub_expr, mul_div_expr, expo_expr;
 nonterminal Expr neg_expr;
 nonterminal Stmt while_stmt;
-
+nonterminal Func_Decl function_declaration, function_header;
+nonterminal Block function_body;
+nonterminal List<Param> parameter_list_opt, parameter_list;
+nonterminal Param parameter;
+nonterminal Expr function_call;
+nonterminal List<Expr> argument_list_opt, argument_list;
 
 /* Precedences */
 precedence left PLUS, MINUS;
@@ -226,12 +230,16 @@ program ::=
     stmt_list_opt:stmts {:
         RESULT = new Program_c(parser.pos(stmts), lexer.file(), stmts);
     :}
+    /*| function_declaration:a {:
+		RESULT = a;
+	:}*/
 ;
 
 var_decl ::=
     IDENTIFIER:id COLON type:type {:
         RESULT = new LocalDecl_c(parser.pos(id, type), parser.id(id), type);
     :}
+    
 ;
 
 type ::=
@@ -249,6 +257,54 @@ primitive_type ::=
 	:}
 ;
 
+function_declaration ::=
+    		// FuncDecl
+    function_header:a function_body:b {:
+		RESULT = a.body(b);
+	:}
+;
+
+function_header ::=
+    		// FuncDecl
+    DEF:a IDENTIFIER:id LPAREN parameter_list_opt:c RPAREN COLON type:d {:
+		 RESULT = new Func_Decl_c(parser.pos(a,d), parser.id(id), c, d, null);
+	:}
+;
+
+function_body ::=
+	/*LBRACE:n block_statements_opt:a return_statement:b RBRACE:d {:
+		a.add(b);
+ 		RESULT = new Block_c(parser.pos(n, d), a); 
+	:}*/
+	block:a {: RESULT = a; :}
+;
+
+parameter_list_opt ::=
+    		// List of Param
+    {: RESULT = new LinkedList<>(); :}
+    | parameter_list:a {:
+		RESULT = a; 
+	:}
+;
+
+parameter_list ::=
+            // List of Param
+    parameter:a
+            {: List<Param> l = new LinkedList<>();
+               l.add(a);
+               RESULT = l; :}
+    | parameter_list:a COMMA parameter:b
+            {: RESULT = a;
+               a.add(b); :}
+;
+
+parameter ::=
+            // Param
+    IDENTIFIER:id COLON type:b {:
+		RESULT = new Param_c(parser.pos(id, b), parser.id(id), b);
+	:}
+;
+                                    
 stmt_list_opt ::=
     /* empty */ {:
         RESULT = Collections.emptyList();
@@ -324,9 +380,6 @@ block_statements ::=
 
 block_statement ::=
                     // List of Stmt
-    /*local_variable_declaration_statement:a {:
-		RESULT = new LinkedList<Stmt>(a); 
-	:}*/
     stmt:a {: 
 		List<Stmt> l = new LinkedList<>();
         l.add(a);
@@ -334,35 +387,19 @@ block_statement ::=
 	:}
 ;
 
-/*local_variable_declaration_statement ::=
-                    // List of LocalDecl
-	var_decl_stmt:a SEMICOLON {: 
-		RESULT = a; 
-	:}
-;*/
-
 if_then_stmt ::= 
 	IF:n expr:e stmt:s {:
 		RESULT = new If_c(parser.pos(n, s), e, s);
 	:}  
-  /*| if_then_stmt_no_paren:a {:
-		RESULT = a; 
-	:} */
 ;
 
-/*if_then_stmt_no_paren ::=
-	IF:n expr:e stmt:s {:
-		RESULT = new If_c(parser.pos(n, s), e, s);
-	:}
-;*/
-
 if_then_else_stmt ::= 
-	IF:n expr:a stmt_no_short_if:b ELSE stmt:c {:
+	IF:n expr:a stmt_for_if_with_else:b ELSE stmt:c {:
 		RESULT = new If_c(parser.pos(n, c), a, b, c);
 	:}
 ;
-stmt_no_short_if ::=
-	if_then_else_statement_no_short_if:a {:
+stmt_for_if_with_else ::=
+	if_then_with_else:a {:
 		RESULT = a; 
 	:}
 	|statement_without_trailing_substatement:a {:
@@ -370,8 +407,8 @@ stmt_no_short_if ::=
 	:}
 ;
 
-if_then_else_statement_no_short_if ::=
-	IF:n expr:a stmt_no_short_if:b ELSE stmt_no_short_if:c {: 
+if_then_with_else ::=
+	IF:n expr:a stmt_for_if_with_else:b ELSE stmt_for_if_with_else:c {: 
 		RESULT = new If_c(parser.pos(n, c), a, b, c); 
 	:}
 ;
@@ -385,16 +422,43 @@ statement_without_trailing_substatement ::=
 	| assignment_stmt:a SEMICOLON {:
         RESULT = a;
     :}
+	| return_statement:a {:
+		RESULT = a;
+	:}
 ;
 
+function_call ::= 
+                    // Call
+    IDENTIFIER:id LPAREN argument_list_opt:a RPAREN:c {:
+		RESULT = new Call_c(parser.pos(id,c), parser.id(id), a);
+	:}
+;
+
+argument_list_opt ::=
+                    // List of Expr
+    {: RESULT = new LinkedList<>(); :}
+    | argument_list:a {:
+		RESULT = a; 
+	:}
+;
+
+argument_list ::=
+                    // List of Expr
+    expr:a {: 
+		List<Expr> l = new LinkedList<>();
+        l.add(a);
+        RESULT = l;
+	:}
+    |argument_list:a COMMA expr:b {:
+		RESULT = a;
+        a.add(b); 
+	:}
+;
+    
 while_stmt ::=
 	WHILE:n expr:e stmt:s {:
 		RESULT = new While_c(parser.pos(n,e),e,s);
 	:}	
-	/*|WHILE:n LPAREN expr:e RPAREN stmt:s{:
-		RESULT = new While_c(parser.pos(n,e),e,s);
-	:}*/
-	
 ;
 
 empty_statement ::=
@@ -404,11 +468,12 @@ empty_statement ::=
 	:}
 ;
 
-/*return_statement ::=
+return_statement ::=
                     // Return
-        RETURN:n expression_opt:a SEMICOLON:d
-            {: RESULT = parser.nf.Return(parser.pos(n, d), a); :}
-;*/
+    RETURN:n expr:a SEMICOLON:d {: 
+		RESULT = new Return_c(parser.pos(n, d), a); 
+	:}
+;
     
 var_decl_stmt ::=
     var_decl:decl {:
@@ -567,6 +632,15 @@ neg_expr ::=
     |LPAREN expr:e RPAREN {:
 		RESULT = e;
 	:}
+	| func_and_array:e {:
+		RESULT = e;
+	:}
 ;
 
+func_and_array ::=
+	function_call:a {: 
+		RESULT = a; 
+	:}
+	// arr
+;
 	

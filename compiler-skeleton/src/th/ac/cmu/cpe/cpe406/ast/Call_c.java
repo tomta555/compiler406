@@ -1,13 +1,20 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
+import java.util.List;
+
 import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
-public class Div_c extends Binary_c implements Div{
+public class Call_c extends Expr_c implements Call {
 
-	public Div_c(Position pos, Expr l, Expr r) {
-		super(pos, l, r);
+	protected Id id;
+	protected List<Expr> args;
+	
+	public Call_c(Position pos, Id id, List<Expr> args) {
+		super(pos);
+		this.id = id;
+		this.args = args;
 	}
 
 	@Override
@@ -15,4 +22,7 @@ public class Div_c extends Binary_c implements Div{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
 }
