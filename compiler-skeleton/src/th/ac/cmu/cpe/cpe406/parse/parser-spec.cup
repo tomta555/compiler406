@@ -549,7 +549,7 @@ logical_and_expr ::=
 
 equality_expr ::=
 	equality_expr:l EQEQ comparison_expr:r {:
-		RESULT = new Equal_c(parser.pos(l, r), l, r);
+		RESULT = new EqualEqual_c(parser.pos(l, r), l, r);
 	:}
 	|equality_expr:l NOTEQ comparison_expr:r {:
 		RESULT = new NotEqual_c(parser.pos(l, r), l, r);

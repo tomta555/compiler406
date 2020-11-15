@@ -4,7 +4,7 @@ import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
-public class LessThan_c extends Binary_c implements LessThan {
+public class LessThan_c extends ComparisonOp_c implements LessThan {
 
 	public LessThan_c(Position pos, Expr l, Expr r) {
 		super(pos, l, r);

@@ -4,9 +4,9 @@ import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
-public class Equal_c extends Binary_c implements Equal{
+public class EqualEqual_c extends ComparisonOp_c implements EqualEqual{
 
-	public Equal_c(Position pos, Expr l, Expr r) {
+	public EqualEqual_c(Position pos, Expr l, Expr r) {
 		super(pos, l, r);
 	}
 

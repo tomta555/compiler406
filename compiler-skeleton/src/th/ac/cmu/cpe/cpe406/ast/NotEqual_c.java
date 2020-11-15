@@ -4,7 +4,7 @@ import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
-public class NotEqual_c extends Binary_c implements NotEqual {
+public class NotEqual_c extends ComparisonOp_c implements NotEqual {
 
 	public NotEqual_c(Position pos, Expr l, Expr r) {
 		super(pos, l, r);

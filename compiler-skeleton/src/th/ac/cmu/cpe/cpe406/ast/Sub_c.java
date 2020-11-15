@@ -4,7 +4,7 @@ import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
-public class Sub_c extends Binary_c implements Sub {
+public class Sub_c extends ArithmeticOp_c implements Sub {
 	
 	public Sub_c(Position pos, Expr l, Expr r) {
 		super(pos, l, r);
