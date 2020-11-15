@@ -239,7 +239,6 @@ var_decl ::=
     IDENTIFIER:id COLON type:type {:
         RESULT = new LocalDecl_c(parser.pos(id, type), parser.id(id), type);
     :}
-    
 ;
 
 type ::=
@@ -636,15 +635,15 @@ neg_expr ::=
 	|NOT:n neg_expr:r {:
 		RESULT = new BooleanNeg_c(parser.pos(n, r), r);
 	:}
-	|IDENTIFIER:id {:
-        RESULT = new Variable_c(parser.pos(id), parser.id(id));
-    :}
     |INTEGER_LITERAL:a {:
         RESULT = new IntLit_c(parser.pos(a), a.getValue().intValue());
     :}
     |BOOLEAN_LITERAL:a {: 
 		RESULT = new BooleanLit_c(parser.pos(a), a.getValue().booleanValue()); 
 	:}
+	|IDENTIFIER:id {:
+        RESULT = new Variable_c(parser.pos(id), parser.id(id));
+    :}
     |LPAREN expr:e RPAREN {:
 		RESULT = e;
 	:}

@@ -225,7 +225,11 @@ SignedInteger = [-+]? [0-9]+
 
     /* String Literals */
     \"      { yybegin(STRING); literalBegin = pos(); sb.setLength(0); }
-
+    
+    /* Boolean Literals */
+    "true"  { return boolean_lit(true);  }
+    "false" { return boolean_lit(false); }
+    
     {Identifier}   { Integer i = keywords.get(yytext());
                      if (i == null) return id();
                      else return key(i.intValue()); }
@@ -264,9 +268,7 @@ SignedInteger = [-+]? [0-9]+
     
 	
 
-    /* Boolean Literals */
-    "true"  { return boolean_lit(true);  }
-    "false" { return boolean_lit(false); }
+
 	
     /* Integer Literals */
     {DecimalNumeral}             { return int_lit(yytext(), 10); }

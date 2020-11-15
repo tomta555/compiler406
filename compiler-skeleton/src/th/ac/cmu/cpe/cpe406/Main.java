@@ -21,6 +21,8 @@ import th.ac.cmu.cpe.cpe406.lex.Lexer_c;
 import th.ac.cmu.cpe.cpe406.lex.Token;
 import th.ac.cmu.cpe.cpe406.parse.Grm;
 import th.ac.cmu.cpe.cpe406.parse.sym;
+import th.ac.cmu.cpe.cpe406.types.SymTable;
+import th.ac.cmu.cpe.cpe406.types.SymTable_c;
 import th.ac.cmu.cpe.cpe406.util.ErrorInfo;
 import th.ac.cmu.cpe.cpe406.util.ErrorQueue;
 import th.ac.cmu.cpe.cpe406.util.CPE406ErrorQueue;
@@ -116,6 +118,8 @@ public class Main {
                         // Create a parser
                         Grm parser = new Grm(lexer, eq, parsedpw);
                         ast = parser.parse().<Program> value();
+                        SymTable sym = new SymTable_c(null);
+                        ast.typeCheck(sym);
                     }
                     catch (RuntimeException e) {
                         throw e;
