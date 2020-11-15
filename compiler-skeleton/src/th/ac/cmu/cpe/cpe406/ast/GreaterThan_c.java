@@ -4,10 +4,10 @@ import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
-public class Integer_Neg_c extends Unary_c implements Integer_Neg{
+public class GreaterThan_c extends Binary_c implements GreaterThan {
 
-	public Integer_Neg_c(Position pos, Expr expr) {
-		super(pos, expr);
+	public GreaterThan_c(Position pos, Expr l, Expr r) {
+		super(pos, l, r);
 	}
 
 	@Override

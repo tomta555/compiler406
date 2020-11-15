@@ -4,9 +4,9 @@ import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
-public class Logical_AND_c extends Binary_c implements Logical_AND {
+public class NotEqual_c extends Binary_c implements NotEqual {
 
-	public Logical_AND_c(Position pos, Expr l, Expr r) {
+	public NotEqual_c(Position pos, Expr l, Expr r) {
 		super(pos, l, r);
 	}
 
@@ -15,5 +15,5 @@ public class Logical_AND_c extends Binary_c implements Logical_AND {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 }

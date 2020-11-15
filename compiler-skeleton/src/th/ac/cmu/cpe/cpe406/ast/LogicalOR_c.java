@@ -4,9 +4,9 @@ import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
-public class Logical_OR_c extends Binary_c implements Logical_OR {
+public class LogicalOR_c extends Binary_c implements LogicalOR {
 
-	public Logical_OR_c(Position pos, Expr l, Expr r) {
+	public LogicalOR_c(Position pos, Expr l, Expr r) {
 		super(pos, l, r);
 	}
 

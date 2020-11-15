@@ -209,7 +209,7 @@ nonterminal Expr equality_expr, comparison_expr;
 nonterminal Expr add_sub_expr, mul_div_expr, expo_expr;
 nonterminal Expr neg_expr;
 nonterminal Stmt while_stmt;
-nonterminal Func_Decl function_declaration, function_header;
+nonterminal FuncDecl function_declaration, function_header;
 nonterminal Block function_body;
 nonterminal List<Param> parameter_list_opt, parameter_list;
 nonterminal Param parameter;
@@ -267,7 +267,7 @@ function_declaration ::=
 function_header ::=
     		// FuncDecl
     DEF:a IDENTIFIER:id LPAREN parameter_list_opt:c RPAREN COLON type:d {:
-		 RESULT = new Func_Decl_c(parser.pos(a,d), parser.id(id), c, d, null);
+		 RESULT = new FuncDecl_c(parser.pos(a,d), parser.id(id), c, d, null);
 	:}
 ;
 
@@ -531,7 +531,7 @@ expr ::=
 
 logical_or_expr ::= 
 	logical_or_expr:l OR logical_and_expr:r {:
-		RESULT = new Logical_OR_c(parser.pos(l, r), l, r);
+		RESULT = new LogicalOR_c(parser.pos(l, r), l, r);
 	:}
 	|logical_and_expr:e {:
 		RESULT = e;
@@ -540,7 +540,7 @@ logical_or_expr ::=
 
 logical_and_expr ::=
 	logical_and_expr:l AND logical_and_expr:r {:
-		RESULT = new Logical_AND_c(parser.pos(l, r), l, r);
+		RESULT = new LogicalAND_c(parser.pos(l, r), l, r);
 	:}
 	|equality_expr:e {:
 		RESULT = e;	
@@ -552,7 +552,7 @@ equality_expr ::=
 		RESULT = new Equal_c(parser.pos(l, r), l, r);
 	:}
 	|equality_expr:l NOTEQ comparison_expr:r {:
-		RESULT = new Not_Equal_c(parser.pos(l, r), l, r);
+		RESULT = new NotEqual_c(parser.pos(l, r), l, r);
 	:}
 	|comparison_expr:e {:
 		RESULT = e; 
@@ -561,16 +561,16 @@ equality_expr ::=
 
 comparison_expr ::= 
 	comparison_expr:l LT add_sub_expr:r {:
-		RESULT = new Less_Than_c(parser.pos(l, r), l, r);
+		RESULT = new LessThan_c(parser.pos(l, r), l, r);
 	:}
 	|comparison_expr:l LTEQ add_sub_expr:r {:
-		RESULT = new Less_Than_Equal_c(parser.pos(l, r), l, r);
+		RESULT = new LessThanEqual_c(parser.pos(l, r), l, r);
 	:} 
 	|comparison_expr:l GT add_sub_expr:r {:
-		RESULT = new Greater_Than_c(parser.pos(l, r), l, r);
+		RESULT = new GreaterThan_c(parser.pos(l, r), l, r);
 	:}
 	|comparison_expr:l GTEQ add_sub_expr:r {:
-		RESULT = new Greater_Than_Equal_c(parser.pos(l, r), l, r);
+		RESULT = new GreaterThanEqual_c(parser.pos(l, r), l, r);
 	:} 
 	|add_sub_expr:e {:
 		RESULT = e;
@@ -615,10 +615,10 @@ expo_expr ::=
 
 neg_expr ::= 
 	MINUS:m neg_expr:r {:
-		RESULT = new Integer_Neg_c(parser.pos(m, r), r);
+		RESULT = new IntegerNeg_c(parser.pos(m, r), r);
 	:}
 	|NOT:n neg_expr:r {:
-		RESULT = new Boolean_Neg_c(parser.pos(n, r), r);
+		RESULT = new BooleanNeg_c(parser.pos(n, r), r);
 	:}
 	|IDENTIFIER:id {:
         RESULT = new Variable_c(parser.pos(id), parser.id(id));
@@ -627,7 +627,7 @@ neg_expr ::=
         RESULT = new IntLit_c(parser.pos(a), a.getValue().intValue());
     :}
     |BOOLEAN_LITERAL:a {: 
-		RESULT = new Boolean_Lit_c(parser.pos(a), a.getValue().booleanValue()); 
+		RESULT = new BooleanLit_c(parser.pos(a), a.getValue().booleanValue()); 
 	:}
     |LPAREN expr:e RPAREN {:
 		RESULT = e;

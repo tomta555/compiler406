@@ -4,9 +4,9 @@ import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
-public class Boolean_Neg_c extends Unary_c implements Boolean_Neg {
+public class BooleanNeg_c extends Unary_c implements BooleanNeg {
 	
-	public Boolean_Neg_c(Position pos, Expr expr) {
+	public BooleanNeg_c(Position pos, Expr expr) {
 		super(pos, expr);
 	}
 

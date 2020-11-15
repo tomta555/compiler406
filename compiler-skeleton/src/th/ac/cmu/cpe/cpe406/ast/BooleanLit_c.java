@@ -4,10 +4,13 @@ import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
-public class Less_Than_Equal_c extends Binary_c implements Less_Than_Equal {
+public class BooleanLit_c extends Expr_c implements BooleanLit{
 
-	public Less_Than_Equal_c(Position pos, Expr l, Expr r) {
-		super(pos, l, r);
+	protected boolean value;
+	
+	public BooleanLit_c(Position pos, boolean value) {
+		super(pos);
+		this.value = value;
 	}
 
 	@Override

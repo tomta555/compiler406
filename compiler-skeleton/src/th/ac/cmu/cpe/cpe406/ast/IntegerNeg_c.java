@@ -4,10 +4,10 @@ import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
-public class Less_Than_c extends Binary_c implements Less_Than {
+public class IntegerNeg_c extends Unary_c implements IntegerNeg{
 
-	public Less_Than_c(Position pos, Expr l, Expr r) {
-		super(pos, l, r);
+	public IntegerNeg_c(Position pos, Expr expr) {
+		super(pos, expr);
 	}
 
 	@Override

@@ -4,9 +4,9 @@ import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
-public class Greater_Than_c extends Binary_c implements Greater_Than {
+public class GreaterThanEqual_c extends Binary_c implements GreaterThanEqual {
 
-	public Greater_Than_c(Position pos, Expr l, Expr r) {
+	public GreaterThanEqual_c(Position pos, Expr l, Expr r) {
 		super(pos, l, r);
 	}
 
