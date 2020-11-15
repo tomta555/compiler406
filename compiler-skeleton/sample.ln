@@ -23,3 +23,5 @@ a=te|as;
 o=inthh;
 if (x<1) if(y==5) z=a; else x=3;
 while a>2 x=a;
+a:int[];
+a[]
