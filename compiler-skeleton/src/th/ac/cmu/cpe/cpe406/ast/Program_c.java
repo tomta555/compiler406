@@ -8,7 +8,7 @@ public class Program_c extends Node_c implements Program {
 
     protected String filename;
 
-    public Program_c(Position pos, String filename, List<Stmt> stmts) {
+    public Program_c(Position pos, String filename, List<Stmt> stmts, List<FuncDecl> funcs) {
         super(pos);
         this.filename = filename;
     }

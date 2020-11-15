@@ -215,7 +215,7 @@ nonterminal List<Param> parameter_list_opt, parameter_list;
 nonterminal Param parameter;
 nonterminal Expr function_call;
 nonterminal List<Expr> argument_list_opt, argument_list;
-
+nonterminal List<FuncDecl> func_list_opt, func_list;
 /* Precedences */
 precedence left PLUS, MINUS;
 precedence left MULT, DIV, MOD;
@@ -227,8 +227,8 @@ precedence right POW;
 start with program;
 
 program ::=
-    stmt_list_opt:stmts {:
-        RESULT = new Program_c(parser.pos(stmts), lexer.file(), stmts);
+    func_list_opt:funcs stmt_list_opt:stmts  {:
+        RESULT = new Program_c(parser.pos(stmts), lexer.file(), stmts, funcs);
     :}
     /*| function_declaration:a {:
 		RESULT = a;
@@ -272,10 +272,6 @@ function_header ::=
 ;
 
 function_body ::=
-	/*LBRACE:n block_statements_opt:a return_statement:b RBRACE:d {:
-		a.add(b);
- 		RESULT = new Block_c(parser.pos(n, d), a); 
-	:}*/
 	block:a {: RESULT = a; :}
 ;
 
@@ -304,7 +300,27 @@ parameter ::=
 		RESULT = new Param_c(parser.pos(id, b), parser.id(id), b);
 	:}
 ;
-                                    
+func_list_opt ::=
+    /* empty */ {:
+        RESULT = Collections.emptyList();
+    :}
+    | func_list:l {:
+        RESULT = l;
+    :}
+;       
+
+func_list ::= 
+    function_declaration:f {:
+        List<FuncDecl> l = new LinkedList<>();
+        l.add(f);
+        RESULT = l;
+    :}
+    | func_list:l function_declaration:f {:
+        l.add(f);
+        RESULT = l;
+    :}
+;
+                
 stmt_list_opt ::=
     /* empty */ {:
         RESULT = Collections.emptyList();
