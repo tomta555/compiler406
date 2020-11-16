@@ -2,6 +2,8 @@ package th.ac.cmu.cpe.cpe406.ast;
 
 import java.util.List;
 
+import th.ac.cmu.cpe.cpe406.types.BoolType_c;
+import th.ac.cmu.cpe.cpe406.types.IntType_c;
 import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.SymTable_c;
 import th.ac.cmu.cpe.cpe406.types.Type;
@@ -12,6 +14,7 @@ public class FuncDecl_c extends Node_c implements FuncDecl {
 	
     protected Id name;
     protected TypeNode returnType;
+    protected Stmt returnStmt;
     protected List<Param> params;
     protected Block body;
     protected Type type;
@@ -25,21 +28,50 @@ public class FuncDecl_c extends Node_c implements FuncDecl {
 	
 	@Override
 	public Type typeCheck(SymTable sym) throws Exception {
-		SymTable newSym = new SymTable_c(sym);
+		
+		SymTable newSym = new SymTable_c(sym); // Table of body of function
+		
 		for (Param p : params) {
 			p.typeCheck(newSym);
 		}
+		Type returnStmtType = null;
+		String returnStmtTypeString = "";
+		String returnTypeString = "";
+    	this.returnStmt = body.getLastStatement();
+    	
+    	if (returnStmt != null) {
+    		returnStmtType = returnStmt.typeCheck(newSym);
+    		if (returnStmtType.isUnit()) {
+    			throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: No return statement in function body");
+    		} else if (returnStmtType.isInt()) {
+    			returnStmtTypeString = "int";
+    		} else if (returnStmtType.isBool()) {
+    			returnStmtTypeString = "bool";
+    		}
+    		else {
+    			
+    		}
+    	} else {
+    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: No return statement in function body");
+    	}
+    	
     	if (returnType.typeCheck(sym).isInt()) {
-    		
+    		returnTypeString = "int";
     	} else if (returnType.typeCheck(sym).isBool()){
-    		
+    		returnTypeString = "bool";
     	} else {
     		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Primitive type error");
     		// this happen when internal compile error with Unknown primitive type
     	}
+    	
+    	if (returnTypeString != returnStmtTypeString) {
+    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Return statement must return " + returnTypeString);
+    	}
+    	
     	if (!body.typeCheck(newSym).isUnit()) { //Body can't declare variable name that already is an input argument
     		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Some statement in function body is not a valid statement");
     	}
+    	
 		this.type = new Unit_c();
 		return this.type;
 	}

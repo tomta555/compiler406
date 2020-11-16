@@ -7,4 +7,6 @@ public interface Expr extends Node {
 
 	Type typeCheck(SymTable sym) throws Exception;
 
+	int getValue();
+
 }
