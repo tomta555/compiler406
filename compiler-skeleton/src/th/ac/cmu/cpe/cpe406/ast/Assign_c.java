@@ -1,6 +1,8 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
 import java.util.List;
+
+import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
 public class Assign_c extends Stmt_c implements Assign {
@@ -13,5 +15,6 @@ public class Assign_c extends Stmt_c implements Assign {
         this.l = l;
         this.r = r;
     }
+
 
 }

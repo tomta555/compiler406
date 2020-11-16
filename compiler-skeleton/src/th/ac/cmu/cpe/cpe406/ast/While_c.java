@@ -14,6 +14,4 @@ public class While_c extends Stmt_c implements While {
 		// TODO Auto-generated constructor stub
 	}
 
-
-
 }

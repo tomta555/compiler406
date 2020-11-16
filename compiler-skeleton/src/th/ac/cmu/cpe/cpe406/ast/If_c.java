@@ -1,5 +1,6 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
+import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
 public class If_c extends Stmt_c implements If {
