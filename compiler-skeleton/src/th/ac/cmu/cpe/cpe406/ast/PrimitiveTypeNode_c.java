@@ -27,5 +27,11 @@ public class PrimitiveTypeNode_c extends TypeNode_c
 		}
 		return this.type;
 	}
-
+	
+	@Override
+	public SymTable BuildSymbolTable(SymTable sym) throws Exception {
+		// TODO Auto-generated method stub
+		return sym;
+	}
+	
 }

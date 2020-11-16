@@ -1,8 +1,10 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import th.ac.cmu.cpe.cpe406.types.BoolType_c;
+import th.ac.cmu.cpe.cpe406.types.FunctionType_c;
 import th.ac.cmu.cpe.cpe406.types.IntType_c;
 import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.SymTable_c;
@@ -28,12 +30,31 @@ public class FuncDecl_c extends Node_c implements FuncDecl {
 	
 	@Override
 	public Type typeCheck(SymTable sym) throws Exception {
+		this.type = new Unit_c();
+		return this.type;
+	}
+	
+	@Override
+	public FuncDecl body(Block b) {
+		this.body = b;
+		return this;
+	}
+
+	@Override
+	public SymTable BuildSymbolTable(SymTable sym) throws Exception {
 		
 		SymTable newSym = new SymTable_c(sym); // Table of body of function
 		
+		List<Type> paramTypes = new LinkedList<>();
+
 		for (Param p : params) {
-			p.typeCheck(newSym);
+			paramTypes.add(p.typeCheck(newSym));
 		}
+    	
+    	if (!body.typeCheckFunc(newSym).isUnit()) { //Body can't declare variable name that already is an input argument
+    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Some statement in function body is not a valid statement");
+    	}
+		
 		Type returnStmtType = null;
 		String returnStmtTypeString = "";
 		String returnTypeString = "";
@@ -68,18 +89,11 @@ public class FuncDecl_c extends Node_c implements FuncDecl {
     		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Return statement must return " + returnTypeString);
     	}
     	
-    	if (!body.typeCheck(newSym).isUnit()) { //Body can't declare variable name that already is an input argument
-    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Some statement in function body is not a valid statement");
-    	}
+    	Type funcType = new FunctionType_c(paramTypes,returnStmtType);
     	
-		this.type = new Unit_c();
-		return this.type;
+    	sym.add(name.name(), funcType);
+    	
+		return sym;
 	}
 	
-	@Override
-	public FuncDecl body(Block b) {
-		this.body = b;
-		return this;
-	}
-
 }

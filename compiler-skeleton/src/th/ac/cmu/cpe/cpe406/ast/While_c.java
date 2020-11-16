@@ -32,5 +32,10 @@ public class While_c extends Stmt_c implements While {
 		this.type = new Unit_c();
 		return this.type;
 	}
-
+	@Override
+	public SymTable BuildSymbolTable(SymTable sym) throws Exception {
+		// TODO Auto-generated method stub
+		return sym;
+	}
+	
 }

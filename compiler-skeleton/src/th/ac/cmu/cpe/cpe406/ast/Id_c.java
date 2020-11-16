@@ -24,4 +24,11 @@ public class Id_c extends Node_c implements Id {
 		// TODO Auto-generated method stub
 		return new Unit_c();
 	}
+	
+	@Override
+	public SymTable BuildSymbolTable(SymTable sym) throws Exception {
+		// TODO Auto-generated method stub
+		return sym;
+	}
+	
 }

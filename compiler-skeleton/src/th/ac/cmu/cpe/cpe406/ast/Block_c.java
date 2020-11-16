@@ -33,7 +33,28 @@ public class Block_c extends Stmt_c implements Block {
     		 }
     	}
 		if (lastStatement != null) {
-	    	if (lastStatement.typeCheck(newSym).isInt() || lastStatement.typeCheck(newSym).isBool() || lastStatement.typeCheck(newSym).isUnit()) {
+			Type lastType = lastStatement.typeCheck(newSym);
+	    	if (lastType.isInt() || lastType.isBool() || lastType.isUnit()) {
+	    	
+	    	} else {
+	    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Last statement in block is not a valid statement");
+	    	}
+		}
+    	this.type = new Unit_c();
+		return this.type;
+		
+	}
+	
+	@Override
+    public Type typeCheckFunc(SymTable sym) throws Exception{
+		for (Stmt s : statements) {
+    		 if (!s.typeCheck(sym).isUnit()) {
+    			 throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Some statement in block is not a valid statement");
+    		 }
+    	}
+		if (lastStatement != null) {
+			Type lastType = lastStatement.typeCheck(sym);
+	    	if (lastType.isInt() || lastType.isBool() || lastType.isUnit()) {
 	    	
 	    	} else {
 	    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Last statement in block is not a valid statement");

@@ -10,4 +10,7 @@ public interface Node extends Copy<Node> {
     Position position();
 
 	Type typeCheck(SymTable sym) throws Exception;
+	
+	SymTable BuildSymbolTable(SymTable sym) throws Exception;
+	
 }

@@ -30,4 +30,12 @@ public class Program_c extends Node_c implements Program {
 
 		return new Unit_c();
 	}
+
+	@Override
+	public SymTable BuildSymbolTable(SymTable sym) throws Exception {
+		for (FuncDecl f : funcs) {
+			f.BuildSymbolTable(sym);
+		}
+		return sym;
+	}
 }
