@@ -4,7 +4,6 @@ import th.ac.cmu.cpe.cpe406.types.BoolType_c;
 import th.ac.cmu.cpe.cpe406.types.IntType_c;
 import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
-import th.ac.cmu.cpe.cpe406.types.Unit_c;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
 public class Param_c extends Node_c implements Param {
@@ -35,9 +34,15 @@ public class Param_c extends Node_c implements Param {
     		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Duplicate parameter '"+ id.name());
     	}
     	sym.add(id.name(), typeToAdd);
-    	
-    	this.type = new Unit_c();
-		return this.type;
+
+		return typeToAdd;
 	}
+	
+	@Override
+	public SymTable BuildSymbolTable(SymTable sym) throws Exception {
+		// TODO Auto-generated method stub
+		return sym;
+	}
+	
 
 }

@@ -119,7 +119,9 @@ public class Main {
                         Grm parser = new Grm(lexer, eq, parsedpw);
                         ast = parser.parse().<Program> value();
                         SymTable sym = new SymTable_c(null);
-                        ast.typeCheck(sym);
+                        SymTable symBuild;
+                        symBuild = new SymTable_c(ast.BuildSymbolTable(sym));
+                        ast.typeCheck(symBuild);
                     }
                     catch (RuntimeException e) {
                         throw e;
