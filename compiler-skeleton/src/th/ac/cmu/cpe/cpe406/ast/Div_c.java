@@ -31,6 +31,6 @@ public class Div_c extends ArithmeticOp_c implements Div{
 		}
 		this.type = new IntType_c();
 		return this.type;
-	}
+	} 
 	
 }
