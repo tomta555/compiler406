@@ -7,8 +7,4 @@ public abstract class Expr_c extends Node_c implements Expr {
     public Expr_c(Position pos) {
         super(pos);
     }
-    
-    public int getValue() {
-    	return 0;
-    }
 }
