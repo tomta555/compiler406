@@ -11,23 +11,41 @@ import java.util.List;
 public class Block_c extends Stmt_c implements Block {
 
 	protected List<Stmt> statements;
+	protected Stmt lastStatement;
 	protected Type type;
 	public Block_c(Position pos, List<Stmt> statements) {
         super(pos);
         assert (statements != null);
+        int lastIndex = 0;
+        if (!statements.isEmpty()) {
+        	lastIndex = statements.size() - 1;
+        	this.lastStatement = statements.remove(lastIndex);
+        }
         this.statements = statements;
     }
 
 	@Override
     public Type typeCheck(SymTable sym) throws Exception{
 		SymTable newSym = new SymTable_c(sym);
-    	for (Stmt s : statements) {
+		for (Stmt s : statements) {
     		 if (!s.typeCheck(newSym).isUnit()) {
     			 throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Some statement in block is not a valid statement");
     		 }
     	}
+		if (lastStatement != null) {
+	    	if (lastStatement.typeCheck(newSym).isInt() || lastStatement.typeCheck(newSym).isBool() || lastStatement.typeCheck(newSym).isUnit()) {
+	    	
+	    	} else {
+	    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Last statement in block is not a valid statement");
+	    	}
+		}
     	this.type = new Unit_c();
 		return this.type;
 		
+	}
+	
+	@Override
+	public Stmt getLastStatement() {
+		return this.lastStatement;
 	}
 }

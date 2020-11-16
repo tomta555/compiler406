@@ -19,6 +19,11 @@ public class IntLit_c extends Expr_c implements IntLit{
 		this.type = new IntType_c();
 		return this.type;
 	}
+
+	@Override
+	public int getValue() {
+		return this.value;
+	}
 }
 
 	

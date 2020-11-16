@@ -7,7 +7,7 @@ import th.ac.cmu.cpe.cpe406.util.Position;
 public class Return_c extends Stmt_c implements Return {
 	
 	protected Expr expr;
-	
+	protected Type type;
 	public Return_c(Position pos, Expr expr) {
 		super(pos);
 		this.expr = expr;
@@ -15,8 +15,9 @@ public class Return_c extends Stmt_c implements Return {
 
 	@Override
 	public Type typeCheck(SymTable sym) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Type exprType = expr.typeCheck(sym);
+		this.type = exprType;
+		return exprType;
 	}
 
 
