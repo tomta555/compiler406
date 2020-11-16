@@ -7,4 +7,5 @@ public abstract class Stmt_c extends Node_c implements Stmt {
     public Stmt_c(Position pos) {
         super(pos);
     }
+
 }
