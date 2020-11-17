@@ -1,5 +1,7 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
+import th.ac.cmu.cpe.cpe406.ir.IRConst_c;
+import th.ac.cmu.cpe.cpe406.ir.IRExpr;
 import th.ac.cmu.cpe.cpe406.types.BoolType_c;
 import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
@@ -21,4 +23,12 @@ public class BooleanLit_c extends Expr_c implements BooleanLit{
 		return this.type;
 	}
 
+	@Override
+	public IRExpr translate() {
+		int v = 0;
+		if (value) {
+			v = 1;
+		}
+		return new IRConst_c(v);
+	}
 }

@@ -1,5 +1,7 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
+import th.ac.cmu.cpe.cpe406.ir.IRConst_c;
+import th.ac.cmu.cpe.cpe406.ir.IRExpr;
 import th.ac.cmu.cpe.cpe406.types.IntType_c;
 import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
@@ -15,15 +17,17 @@ public class IntLit_c extends Expr_c implements IntLit{
 		this.value = value;
 	}   
 	
+	@Override
 	public Type typeCheck(SymTable sym) {
 		this.type = new IntType_c();
 		return this.type;
 	}
 
 	@Override
-	public int getValue() {
-		return this.value;
+	public IRExpr translate() {
+		return new IRConst_c(value);
 	}
+
 }
 
 	

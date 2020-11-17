@@ -3,6 +3,7 @@ package th.ac.cmu.cpe.cpe406.ast;
 import java.util.LinkedList;
 import java.util.List;
 
+import th.ac.cmu.cpe.cpe406.ir.IRExpr;
 import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
@@ -82,6 +83,12 @@ public class Call_c extends Expr_c implements Call {
 		
 		this.type = funcType.getReturnType();
 		return this.type;
+	}
+
+	@Override
+	public IRExpr translate() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

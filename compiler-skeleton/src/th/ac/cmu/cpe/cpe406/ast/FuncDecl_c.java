@@ -3,9 +3,7 @@ package th.ac.cmu.cpe.cpe406.ast;
 import java.util.LinkedList;
 import java.util.List;
 
-import th.ac.cmu.cpe.cpe406.types.BoolType_c;
 import th.ac.cmu.cpe.cpe406.types.FunctionType_c;
-import th.ac.cmu.cpe.cpe406.types.IntType_c;
 import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.SymTable_c;
 import th.ac.cmu.cpe.cpe406.types.Type;
