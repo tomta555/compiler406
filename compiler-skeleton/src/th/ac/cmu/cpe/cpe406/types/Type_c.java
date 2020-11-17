@@ -3,6 +3,7 @@ package th.ac.cmu.cpe.cpe406.types;
 import java.util.List;
 
 public abstract class Type_c implements Type {
+	protected int size;
 	
 	@Override
 	public boolean isInt() {
@@ -43,4 +44,15 @@ public abstract class Type_c implements Type {
 	public Type getElementType() {
 		return null;
 	}
+	
+	@Override
+	public int size() {
+		return -1;
+	}
+	
+	@Override
+	public void addSize(int size) {
+		this.size = size;
+	}
+
 }

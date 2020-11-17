@@ -274,23 +274,7 @@ array_type ::=
     primitive_type:a LBRACK RBRACK  {:
 		RESULT = new ArrayTypeNode_c(parser.pos(a),a); 
 	:}
-/*	| lvalue:a dims:b{: 
-		RESULT = new Array_c(parser.pos(a),a.toType(), b.intValue()); 
-	:}*/
 ;
-
-    
-
-/*dims ::=
-                    // Integer
-    LBRACK  RBRACK {:
-         	List<dim> a = new LinkedList<>();
-           	a.add(d);
-           	RESULT = a; 
-	:}
-
-;*/
-
 
 array_initializer ::=
                     // ArrayInit
@@ -314,10 +298,6 @@ variable_initializer ::=
                     // Expr
         expr:a
             {: RESULT = a; :}
-/*
- 	|   array_initializer:a
-            {: RESULT = a; :}
-*/	
 ;
 
 array_access ::=
@@ -738,6 +718,5 @@ func_and_array ::=
 	|array_access : a{:
 		RESULT = a;
 	:}
-	// arr
 ;
 	

@@ -31,7 +31,8 @@ public class LocalDecl_c extends Stmt_c implements LocalDecl {
 	    		typeToAdd = new BoolType_c();
 	    	} else if (checkType.isArray()){
 	    		Type eleType = checkType.getElementType();
-	    		typeToAdd = new ArrayType_c(eleType);
+	    		int size = checkType.size();
+	    		typeToAdd = new ArrayType_c(eleType, size);
 	    	}
 	    	else {
 	    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Primitive type error");

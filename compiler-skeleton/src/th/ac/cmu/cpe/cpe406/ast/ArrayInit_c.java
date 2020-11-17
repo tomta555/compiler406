@@ -20,12 +20,14 @@ public class ArrayInit_c extends Stmt_c implements ArrayInit {
 
 	@Override
 	public Type typeCheck(SymTable sym) throws Exception {
+		int size = elements.size();
 		String aType = "";
 		Type arrType = sym.lookup(id.name());
 		if (arrType != null) {
 			if (!arrType.isArray()) {
 				throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: "+ id.name() + " is not an array");
 			} else {
+				arrType.addSize(size);
 				if (arrType.getElementType().isInt()) {
 					aType = "int";
 				} else if (arrType.getElementType().isBool()) {

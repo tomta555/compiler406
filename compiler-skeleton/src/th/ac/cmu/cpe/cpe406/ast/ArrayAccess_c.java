@@ -21,6 +21,12 @@ public class ArrayAccess_c extends Variable_c implements ArrayAccess {
 			if (!arrType.isArray()) {
 				throw new Exception("Compile error at " + pos.path() + "line:" + pos.line() + "\nError: '" + id.name() + "' is not an array");
 			} else {
+				if (!index.typeCheck(sym).isInt()) {
+					throw new Exception("Compile error at " + pos.path() + "line:" + pos.line() + "\nError: Array index is not an 'int'");
+				}
+				if (arrType.size() <= 0) {
+					throw new Exception("Compile error at " + pos.path() + "line:" + pos.line() + "\nError: invalid access an uninitialized array");
+				}
 				this.type = arrType.getElementType();
 			}
 		} else {

@@ -18,7 +18,7 @@ public class ArrayTypeNode_c extends TypeNode_c implements ArrayTypeNode {
 	
 	@Override
 	public Type typeCheck(SymTable sym) throws Exception {
-		this.type = new ArrayType_c(arrayType.typeCheck(sym));
+		this.type = new ArrayType_c(arrayType.typeCheck(sym), 0);
 		return this.type;
 	}
 	

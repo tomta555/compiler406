@@ -11,5 +11,7 @@ public interface Type {
 	Type getReturnType();
 	boolean isArray();
 	Type getElementType();
+	int size();
+	void addSize(int size);
 
 }
