@@ -259,7 +259,6 @@ SignedInteger = [-+]? [0-9]+
     ">"    { return op(sym.GT);         }
     "<"    { return op(sym.LT);         }
     "!"    { return op(sym.NOT);        }
-    "=="   { return op(sym.EQEQ);       }
     "<="   { return op(sym.LTEQ);       }
     ">="   { return op(sym.GTEQ);       }
     "!="   { return op(sym.NOTEQ);      }
