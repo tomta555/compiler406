@@ -240,23 +240,20 @@ program ::=
     func_list_opt:funcs stmt_list_opt:stmts  {:
         RESULT = new Program_c(parser.pos(stmts), lexer.file(), stmts, funcs);
     :}
-    /*| function_declaration:a {:
-		RESULT = a;
-	:}*/
 ;
 
 var_decl ::=
-    IDENTIFIER:id COLON type:type {:
-        RESULT = new LocalDecl_c(parser.pos(id, type), parser.id(id), type);
+    IDENTIFIER:id COLON type:t {:
+        RESULT = new LocalDecl_c(parser.pos(id, t), parser.id(id), t);
     :}
 ;
 
 type ::=
-    primitive_type:type {:
-        RESULT = type;
+    primitive_type:t {:
+        RESULT = t;
     :}
- 	|	reference_type:type	{: 
-		RESULT = type; 
+ 	| reference_type:t	{: 
+		RESULT = t; 
 	:}
 ;
 
@@ -274,8 +271,8 @@ reference_type ::=
 	:}
 ;
 array_type ::=
-    primitive_type:a LBRACK  RBRACK  {:
-		RESULT = new Array_c(parser.pos(a),a); 
+    primitive_type:a LBRACK RBRACK  {:
+		RESULT = new ArrayTypeNode_c(parser.pos(a),a); 
 	:}
 /*	| lvalue:a dims:b{: 
 		RESULT = new Array_c(parser.pos(a),a.toType(), b.intValue()); 

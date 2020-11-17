@@ -25,6 +25,11 @@ public abstract class Type_c implements Type {
 	}
 	
 	@Override
+	public boolean isArray() {
+		return false;
+	}
+	
+	@Override
 	public List<Type> getParamTypes(){
 		return null;
 	}
@@ -32,5 +37,10 @@ public abstract class Type_c implements Type {
 	@Override
 	public Type getReturnType() {
 		return null;	
+	}
+	
+	@Override
+	public Type getElementType() {
+		return null;
 	}
 }

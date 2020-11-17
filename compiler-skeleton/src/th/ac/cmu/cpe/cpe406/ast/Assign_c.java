@@ -38,11 +38,17 @@ public class Assign_c extends Stmt_c implements Assign {
 				Type rType = rTypeList.get(i);
 				if (lType != null && rType != null) {
 					if (lType.isInt()) {					//if left is int
+						if (rType.isArray()) {
+							throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Invalid array assignment");
+						}
 						if (!rType.isInt()) {				//if right is bool
 							throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Can't assign expression type 'bool' to variable type 'int' ");
 						}
 					}
 					else if (!lType.isInt()) {				//if left is bool
+						if (lType.isArray()) {
+							throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Invalid array assignment");
+						}
 						if (rType.isInt()) {				//if right is int
 							throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Can't assign expression type 'int' to variable type 'bool' ");
 						}

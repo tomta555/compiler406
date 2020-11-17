@@ -5,18 +5,28 @@ import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
 public class ArrayAccess_c extends Variable_c implements ArrayAccess {
-	protected Id array;
+	protected Id name;
     protected Expr index;
-	public ArrayAccess_c(Position pos,Id array, Expr index) {
-		super(pos,array);
-        assert (array != null && index != null);
-        this.array = array;
+    protected Type type;
+	public ArrayAccess_c(Position pos,Id name, Expr index) {
+		super(pos,name);
+        assert (name != null && index != null);
+        this.name = name;
         this.index = index;
 	}
 	@Override
 	public Type typeCheck(SymTable sym) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Type arrType = sym.lookup(name.name());
+		if (arrType != null) {
+			if (!arrType.isArray()) {
+				throw new Exception("Compile error at " + pos.path() + "line:" + pos.line() + "\nError: '" + id.name() + "' is not an array");
+			} else {
+				this.type = arrType.getElementType();
+			}
+		} else {
+			throw new Exception("Compile error at " + pos.path() + "line:" + pos.line() + "\nError: '" + id.name() + "' was not declared in this scope");
+		}
+		return this.type;
 	}
 
 	

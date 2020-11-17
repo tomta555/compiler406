@@ -9,5 +9,7 @@ public interface Type {
 	boolean isFunction();
 	List<Type> getParamTypes();
 	Type getReturnType();
+	boolean isArray();
+	Type getElementType();
 
 }
