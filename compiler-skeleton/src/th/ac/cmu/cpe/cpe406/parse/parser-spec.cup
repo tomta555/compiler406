@@ -197,9 +197,13 @@ nonterminal List<Stmt> block_statements_opt, block_statements;
 nonterminal List<Stmt> block_statement;
 nonterminal Stmt var_decl_stmt;
 nonterminal TypeNode var_decl_type;
+nonterminal TypeNode reference_type;
+nonterminal TypeNode array_type;
+nonterminal Name name;
 nonterminal Stmt assignment_stmt;
 nonterminal Stmt if_then_stmt, if_then_else_stmt, if_then_with_else;
 nonterminal Expr primary, expr;
+nonterminal Integer dims;
 nonterminal Variable lvalue;
 nonterminal List<Variable> left_id;
 nonterminal List<Expr> right_expr;
@@ -245,6 +249,9 @@ type ::=
     primitive_type:type {:
         RESULT = type;
     :}
+ 	|	reference_type:type	{: 
+		RESULT = type; 
+	:}
 ;
 
 primitive_type ::=
@@ -255,6 +262,30 @@ primitive_type ::=
 		RESULT = new PrimitiveTypeNode_c(parser.pos(b), PrimitiveTypeNode.Kind.BOOL);
 	:}
 ;
+reference_type ::=
+	array_type:a {: 
+		RESULT = a; 
+	:}
+;
+array_type ::=
+    primitive_type:a dims:b {:
+		RESULT = new Array_c(parser.pos(a),a, b.intValue()); 
+	:}
+/*	| lvalue:a dims:b{: 
+		RESULT = new Array_c(parser.pos(a),a.toType(), b.intValue()); 
+	:}*/
+;
+
+    
+
+dims ::=
+                    // Integer
+        LBRACK RBRACK
+            {: RESULT = new Integer(1); :}
+    |   dims:a LBRACK RBRACK
+            {: RESULT = new Integer(a.intValue() + 1); :}
+;
+
 
 function_declaration ::=
     		// FuncDecl
