@@ -189,7 +189,7 @@ nonterminal TypeNode type;
 nonterminal TypeNode primitive_type;
 //array
 nonterminal TypeNode array_type;
-nonterminal ArrayInit array_initializer;
+nonterminal ArrayInit array_init;
 nonterminal Expr variable_initializer;
 nonterminal List<Expr> variable_initializers;
 nonterminal Variable array_access;
@@ -276,7 +276,7 @@ array_type ::=
 	:}
 ;
 
-array_initializer ::=
+array_init ::=
                     // ArrayInit
         IDENTIFIER:n LBRACK  RBRACK EQ LBRACE variable_initializers:a COMMA RBRACE:d {: 
 			RESULT = new ArrayInit_c(parser.pos(n, d), parser.id(n), a); 
@@ -491,7 +491,8 @@ statement_without_trailing_substatement ::=
     :}
 	| return_statement:a {:
 		RESULT = a;
-	:}	| array_initializer:a SEMICOLON{:
+	:}	
+	| array_init:a SEMICOLON{:
 		RESULT =a;
 	:} 
 	
