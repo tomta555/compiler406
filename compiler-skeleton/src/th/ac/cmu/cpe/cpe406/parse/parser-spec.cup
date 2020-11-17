@@ -187,6 +187,12 @@ nonterminal LocalDecl var_decl;
 
 nonterminal TypeNode type;
 nonterminal TypeNode primitive_type;
+//array
+nonterminal TypeNode array_type;
+nonterminal ArrayInit array_initializer;
+nonterminal Expr variable_initializer;
+nonterminal List<Expr> variable_initializers;
+nonterminal Variable array_access;
 
 nonterminal List<Stmt> stmt_list_opt, stmt_list;
 nonterminal Stmt stmt, stmt_for_if_with_else, statement_without_trailing_substatement;
@@ -198,7 +204,7 @@ nonterminal List<Stmt> block_statement;
 nonterminal Stmt var_decl_stmt;
 nonterminal TypeNode var_decl_type;
 nonterminal TypeNode reference_type;
-nonterminal TypeNode array_type;
+
 nonterminal Name name;
 nonterminal Stmt assignment_stmt;
 nonterminal Stmt if_then_stmt, if_then_else_stmt, if_then_with_else;
@@ -268,8 +274,8 @@ reference_type ::=
 	:}
 ;
 array_type ::=
-    primitive_type:a dims:b {:
-		RESULT = new Array_c(parser.pos(a),a, b.intValue()); 
+    primitive_type:a LBRACK  RBRACK  {:
+		RESULT = new Array_c(parser.pos(a),a); 
 	:}
 /*	| lvalue:a dims:b{: 
 		RESULT = new Array_c(parser.pos(a),a.toType(), b.intValue()); 
@@ -278,14 +284,51 @@ array_type ::=
 
     
 
-dims ::=
+/*dims ::=
                     // Integer
-        LBRACK RBRACK
-            {: RESULT = new Integer(1); :}
-    |   dims:a LBRACK RBRACK
-            {: RESULT = new Integer(a.intValue() + 1); :}
+    LBRACK  RBRACK {:
+         	List<dim> a = new LinkedList<>();
+           	a.add(d);
+           	RESULT = a; 
+	:}
+
+;*/
+
+
+array_initializer ::=
+                    // ArrayInit
+        IDENTIFIER:n LBRACK  RBRACK EQ LBRACE variable_initializers:a COMMA RBRACE:d {: 
+			RESULT = new ArrayInit_c(parser.pos(n, d), parser.id(n), a); 
+	:}
+    |   IDENTIFIER:n LBRACK  RBRACK EQ LBRACE variable_initializers:a RBRACE:d {: 
+			RESULT = new ArrayInit_c(parser.pos(n, d), parser.id(n), a); 
+	:}
+;
+variable_initializers ::=
+                    // List of Expr
+        variable_initializer:a
+            {: List<Expr> l = new LinkedList<>();
+           l.add(a);
+           RESULT = l; :}
+    |   variable_initializers:a COMMA variable_initializer:b
+            {: RESULT = a; a.add(b); :}
+;
+variable_initializer ::=
+                    // Expr
+        expr:a
+            {: RESULT = a; :}
+/*
+ 	|   array_initializer:a
+            {: RESULT = a; :}
+*/	
 ;
 
+array_access ::=
+                    // ArrayAccess
+        IDENTIFIER:a LBRACK expr:b RBRACK:d
+            {: RESULT = new ArrayAccess_c(parser.pos(a, d), parser.id(a), b); :}
+
+;
 
 function_declaration ::=
     		// FuncDecl
@@ -391,6 +434,7 @@ stmt ::=
 	| error SEMICOLON:a
             {: RESULT = new Empty_c(parser.pos(a)); 
 	:}	
+
 ;
 
 block ::=
@@ -470,7 +514,10 @@ statement_without_trailing_substatement ::=
     :}
 	| return_statement:a {:
 		RESULT = a;
-	:}
+	:}	| array_initializer:a SEMICOLON{:
+		RESULT =a;
+	:} 
+	
 ;
 
 function_call ::= 
@@ -536,7 +583,7 @@ var_decl_type ::=
 assignment_stmt ::=
 	left_id:l EQ right_expr:r {:
         RESULT = new Assign_c(parser.pos(l, r), l, r);
-    :}    
+    :}  
 ;
 
 left_id ::=
@@ -567,12 +614,16 @@ lvalue ::=
     IDENTIFIER:id {:
         RESULT = new Variable_c(parser.pos(id), parser.id(id));
     :}
+    | array_access:a{:
+		RESULT = a ;
+	:}
 ;
 
 expr ::=
 	logical_or_expr:e {:
 		RESULT = e;
 	:}
+	
 ;
 
 logical_or_expr ::= 
@@ -686,6 +737,9 @@ neg_expr ::=
 func_and_array ::=
 	function_call:a {: 
 		RESULT = a; 
+	:}
+	|array_access : a{:
+		RESULT = a;
 	:}
 	// arr
 ;

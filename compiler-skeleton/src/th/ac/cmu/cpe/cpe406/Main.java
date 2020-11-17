@@ -118,10 +118,10 @@ public class Main {
                         // Create a parser
                         Grm parser = new Grm(lexer, eq, parsedpw);
                         ast = parser.parse().<Program> value();
-                        SymTable sym = new SymTable_c(null);
-                        SymTable symBuild;
-                        symBuild = new SymTable_c(ast.BuildSymbolTable(sym));
-                        ast.typeCheck(symBuild);
+//                        SymTable sym = new SymTable_c(null);
+//                        SymTable symBuild;
+//                        symBuild = new SymTable_c(ast.BuildSymbolTable(sym));
+//                        ast.typeCheck(symBuild);
                     }
                     catch (RuntimeException e) {
                         throw e;
