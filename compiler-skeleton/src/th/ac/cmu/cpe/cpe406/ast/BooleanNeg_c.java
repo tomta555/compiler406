@@ -1,5 +1,6 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
+import th.ac.cmu.cpe.cpe406.ir.IRExpr;
 import th.ac.cmu.cpe.cpe406.types.BoolType_c;
 import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
@@ -21,6 +22,12 @@ public class BooleanNeg_c extends Unary_c implements BooleanNeg {
 		}
 		this.type = new BoolType_c();
 		return this.type;
+	}
+
+	@Override
+	public IRExpr translate() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

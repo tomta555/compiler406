@@ -1,5 +1,7 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
+import th.ac.cmu.cpe.cpe406.ir.IRExpr;
+import th.ac.cmu.cpe.cpe406.ir.IRTemp_c;
 import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
 import th.ac.cmu.cpe.cpe406.util.Position;
@@ -22,5 +24,10 @@ public class Variable_c extends Expr_c implements Variable {
 		}
 		this.type = varType;
 		return this.type;
+	}
+
+	@Override
+	public IRExpr translate() {
+		return new IRTemp_c(id.name());
 	}
 }

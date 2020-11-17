@@ -1,5 +1,7 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
+import th.ac.cmu.cpe.cpe406.ir.IRDiv_c;
+import th.ac.cmu.cpe.cpe406.ir.IRExpr;
 import th.ac.cmu.cpe.cpe406.types.IntType_c;
 import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
@@ -28,5 +30,11 @@ public class Div_c extends ArithmeticOp_c implements Div{
 		this.type = new IntType_c();
 		return this.type;
 	}
+	
+	@Override
+	public IRExpr translate() {
+		return new IRDiv_c(l.translate(),r.translate());
+	}
+	
 	
 }

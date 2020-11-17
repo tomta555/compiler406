@@ -27,12 +27,10 @@ public abstract class Type_c implements Type {
 	@Override
 	public List<Type> getParamTypes(){
 		return null;
-	
 	}
 	
 	@Override
 	public Type getReturnType() {
-		return null;
-		
+		return null;	
 	}
 }
