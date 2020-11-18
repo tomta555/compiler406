@@ -24,3 +24,5 @@ c=true;
 c=false;
 
 d=c;
+
+a,b=1,2;
