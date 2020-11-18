@@ -29,7 +29,7 @@ public class Block_c extends Stmt_c implements Block {
 		SymTable newSym = new SymTable_c(sym);
 		for (Stmt s : statements) {
     		 if (!s.typeCheck(newSym).isUnit()) {
-    			 throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Some statement in block is not a valid statement");
+    			 throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Return is not the last statement");
     		 }
     	}
 		if (lastStatement != null) {

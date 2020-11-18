@@ -24,10 +24,6 @@ public class Program_c extends Node_c implements Program {
 		for (Stmt s : stmts) {
 			s.typeCheck(sym);
 		}
-		for (FuncDecl f : funcs) {
-			f.typeCheck(sym);
-		}
-
 		return new Unit_c();
 	}
 
