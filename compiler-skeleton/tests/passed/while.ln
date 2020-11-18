@@ -1,0 +1,25 @@
+a:int;
+a':int;
+b:bool;
+b=true;
+
+while true ;
+
+while b ;
+
+while (true) ;
+
+while(b) ;
+
+while true a=4;
+
+while true{
+	a=4;
+	a=12;
+	}
+	
+	
+while a>a'{
+a=4;
+a=12;
+}
