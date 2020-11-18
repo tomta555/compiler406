@@ -28,6 +28,23 @@ public class FuncDecl_c extends Node_c implements FuncDecl {
 	
 	@Override
 	public Type typeCheck(SymTable sym) throws Exception {
+		this.type = new Unit_c();
+		return this.type;
+	}
+	
+	@Override
+	public FuncDecl body(Block b) {
+		this.body = b;
+		return this;
+	}
+
+	@Override
+	public SymTable BuildSymbolTable(SymTable sym) throws Exception {
+		
+		Type fn = sym.lookup(name.name());
+		if (fn != null) {
+			throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Redeclaration of function'" + name.name()+"'");
+		}
 		
 		SymTable newSym = new SymTable_c(sym); // Table of body of function
 		
@@ -36,11 +53,7 @@ public class FuncDecl_c extends Node_c implements FuncDecl {
 		for (Param p : params) {
 			paramTypes.add(p.typeCheck(newSym));
 		}
-		
-    	if (!body.typeCheckFunc(newSym).isUnit()) { //Body can't declare variable name that already is an input argument
-    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Some statement in function body is not a valid statement");
-    	}
-		
+
 		Type returnStmtType = null;
 		String returnStmtTypeString = "";
 		String returnTypeString = "";
@@ -72,42 +85,16 @@ public class FuncDecl_c extends Node_c implements FuncDecl {
     	}
     	
     	if (returnTypeString != returnStmtTypeString) {
-    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Return statement must return type '" + returnTypeString + "'");
-    	}
-    	
-		this.type = new Unit_c();
-		return this.type;
-	}
-	
-	@Override
-	public FuncDecl body(Block b) {
-		this.body = b;
-		return this;
-	}
-
-	@Override
-	public SymTable BuildSymbolTable(SymTable sym) throws Exception {
-		
-		Type fn = sym.lookup(name.name());
-		if (fn != null) {
-			throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Redeclaration of function'" + name.name()+"'");
-		}
-		
-		SymTable newSym = new SymTable_c(sym); // Table of body of function
-		
-		List<Type> paramTypes = new LinkedList<>();
-
-		for (Param p : params) {
-			paramTypes.add(p.typeCheck(newSym));
-		}
-		Type returnStmtType = null;
-    	if (returnStmt != null) {
-    		returnStmtType = returnStmt.typeCheck(newSym);
+    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Return statement must return type " + returnTypeString);
     	}
     	
     	Type funcType = new FunctionType_c(paramTypes,returnStmtType);
     	
     	sym.add(name.name(), funcType);
+    	
+    	if (!body.typeCheckFunc(newSym).isUnit()) { //Body can't declare variable name that already is an input argument
+    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Some statement in function body is not a valid statement");
+    	}
     	
 		return sym;
 	}
