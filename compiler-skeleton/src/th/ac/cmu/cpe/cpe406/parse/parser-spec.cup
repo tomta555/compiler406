@@ -483,6 +483,9 @@ statement_without_trailing_substatement ::=
 	block:a {: 
 		RESULT = a; 
 	:} 
+	|var_decl_stmt:d SEMICOLON {:
+        RESULT = d;
+    :}
 	| empty_statement:a {: 
 		RESULT = a; 
 	:}
