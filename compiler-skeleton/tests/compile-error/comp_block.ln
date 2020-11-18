@@ -1,22 +1,25 @@
 //ERROR declare id main and block
 c:int;
 d:bool;
-{	c:int:
+{	c:int;
 	d:bool;
 }
 
 //ERROR  use id declare previous block
-{ 	e:int;
+{ 	
+	e:int;
 	f:bool;
 }
 e=6;
 f=true;
 
 //ERROR use id declare previous block in current block
-{	a:int;
+{	
+	a:int;
 	b:bool;
 }
-{	a=5;
+{	
+	a=5;
 	b=false;
 }
 

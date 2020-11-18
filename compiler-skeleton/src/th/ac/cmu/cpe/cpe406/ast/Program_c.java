@@ -21,6 +21,9 @@ public class Program_c extends Node_c implements Program {
     
 	@Override
 	public Type typeCheck(SymTable sym) throws Exception {
+		for (FuncDecl f : funcs) {
+			f.typeCheck(sym);
+		}
 		for (Stmt s : stmts) {
 			s.typeCheck(sym);
 		}

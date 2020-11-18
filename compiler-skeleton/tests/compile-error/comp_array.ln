@@ -1,4 +1,4 @@
-a[]:int;
-b[]:bool;
+a:int[];
+b:bool[];
 
-a[0]={true,0,0};
+a[]={true,0,0};

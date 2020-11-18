@@ -120,7 +120,7 @@ public class Main {
                         ast = parser.parse().<Program> value();
                         SymTable sym = new SymTable_c(null);
                         SymTable symBuild;
-                        symBuild = new SymTable_c(ast.BuildSymbolTable(sym));
+                        symBuild = ast.BuildSymbolTable(sym);
                         ast.typeCheck(symBuild);
                     }
                     catch (RuntimeException e) {

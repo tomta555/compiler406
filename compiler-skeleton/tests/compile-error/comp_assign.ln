@@ -1,4 +1,4 @@
-a=int:
+a:int;
 
 a=true;
 

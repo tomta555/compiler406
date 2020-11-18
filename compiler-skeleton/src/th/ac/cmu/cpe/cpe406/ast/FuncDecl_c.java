@@ -93,7 +93,7 @@ public class FuncDecl_c extends Node_c implements FuncDecl {
 			throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Redeclaration of function'" + name.name()+"'");
 		}
 		
-		SymTable newSym = new SymTable_c(null);
+		SymTable newSym = new SymTable_c(sym);
 		
 		List<Type> paramTypes = new LinkedList<>();
 

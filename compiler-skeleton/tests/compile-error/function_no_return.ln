@@ -1,4 +1,3 @@
 def fn2(z:bool):bool{
 	z = true;
-	
 }
