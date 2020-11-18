@@ -1,0 +1,15 @@
+int:int;
+
+bool:bool;
+
+int:bool;
+
+bool:int;
+
+a:integer;
+
+b:boolean;
+
+c:int
+
+d=int;

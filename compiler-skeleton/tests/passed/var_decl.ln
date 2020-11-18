@@ -25,3 +25,12 @@ a'':int;
 a'_b':bool;
 
 a_'b:int[];
+
+integer:int;
+
+boolean:bool;
+
+{c':int;}
+
+{e:int;}
+{e:int;}
