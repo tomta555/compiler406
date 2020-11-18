@@ -23,12 +23,25 @@ a=a/b;
 
 a=a+a+b+a+b+d;
 
-a=a+-a;
+b=d+-a;
+
+b=d--a;
+
+b=d*-a;
+
+b=d/-a;
+
+b=d**-a;
+
+b=d%-a;
+
 
 b=a+a-a*b*a*b-b+a*a+a/b;
 
 a=a+b*a/a*b/b-a+a+b/a*b/a/b+b----a+b/d+a+b/a+b/a+b/a/b;
 
 d=a**b;
+
+a=a--------------------------------------------------b;
 
 d=a%b;

@@ -1,0 +1,27 @@
+a:bool;
+b:bool;
+c:int;
+d:int;
+
+
+a = c < b;
+
+b = a > d;
+
+a = b <= d;
+
+a = a >= d;
+
+a = c == b;
+
+c = c < d;
+
+c = c > d;
+
+c = c <= d;
+
+c = c >= d;
+
+c = c == d;
+
+c = a == b;

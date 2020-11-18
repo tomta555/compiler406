@@ -1,0 +1,21 @@
+a:int;
+b:int;
+c:bool;
+d:int;
+
+
+
+c=a+d;
+
+c=a-d;
+
+c=a*d;
+
+c=a/d;
+
+c=a%d;
+
+c=a**d;
+
+c = 2;
+

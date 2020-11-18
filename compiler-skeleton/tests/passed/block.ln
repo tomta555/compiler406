@@ -1,0 +1,26 @@
+a:int;
+b:int;
+c:bool;
+d:int;
+
+
+{}
+
+
+{	a=4;
+	b=6
+	c=true;
+	b=-4+a;
+	d=a+b;
+	b=b+a;
+	b=a-b;
+	d=d-d;
+}
+
+
+
+{ 	e:int;
+	f:bool;
+	e=10;
+	f=true;
+}

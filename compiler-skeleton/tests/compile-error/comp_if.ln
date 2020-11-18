@@ -1,0 +1,12 @@
+a:bool;
+b:bool;
+c:int;
+d:int;
+
+if d ; 
+
+if c <= d 	
+	n:int;
+else{
+	n:int;
+}

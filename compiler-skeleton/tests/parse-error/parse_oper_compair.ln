@@ -1,0 +1,15 @@
+a:bool;
+b:bool;
+c:int;
+d:int;
+
+
+a = c << b;
+
+b = c >> d;
+
+a = c <<= d;
+
+a = c >>= d;
+
+a = a === b;

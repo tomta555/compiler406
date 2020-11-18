@@ -1,0 +1,45 @@
+a:bool;
+b:bool;
+c:int;
+d:int;
+
+if a ;
+
+if true ; 
+
+if true ; else ;
+
+if (true) while true if true ; else ; 
+
+if (true) {while true if true ; else ;} else ;
+
+if c <= d e:int;
+
+
+if(c <= d) f:int;
+
+
+if(c <= d){
+	g:int;
+	h:int;
+}
+
+if c <= d {
+	i:int;
+}else{
+
+}
+
+if c <= d n:int; else m:int;
+
+if c <= d {
+	h:int;
+	i:int;
+}else{
+	h:int;
+	i:int;
+}
+
+
+
+
