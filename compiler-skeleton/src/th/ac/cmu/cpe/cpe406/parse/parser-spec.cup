@@ -396,9 +396,6 @@ stmt ::=
 	statement_without_trailing_substatement:a {:
 		RESULT = a;
 	:}
-    | var_decl_stmt:d SEMICOLON {:
-        RESULT = d;
-    :}
     | if_then_stmt:a {:
 		RESULT = a;
 	:}
