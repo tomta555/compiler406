@@ -1,6 +1,7 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
 import th.ac.cmu.cpe.cpe406.ir.IRExpr;
+import th.ac.cmu.cpe.cpe406.ir.IRSlt_c;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
 public class GreaterThan_c extends ComparisonOp_c implements GreaterThan {
@@ -11,8 +12,7 @@ public class GreaterThan_c extends ComparisonOp_c implements GreaterThan {
 
 	@Override
 	public IRExpr translate() {
-		// TODO Auto-generated method stub
-		return null;
+		return new IRSlt_c(r.translate(), l.translate());
 	}
 
 }

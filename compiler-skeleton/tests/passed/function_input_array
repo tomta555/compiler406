@@ -1,0 +1,5 @@
+def fn2(z:bool[],x:int,c:bool):bool{
+	s:bool;
+	s = z[0];
+	return s;
+}

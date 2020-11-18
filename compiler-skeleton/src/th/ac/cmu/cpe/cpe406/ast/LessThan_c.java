@@ -1,6 +1,7 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
 import th.ac.cmu.cpe.cpe406.ir.IRExpr;
+import th.ac.cmu.cpe.cpe406.ir.IRSlt_c;
 import th.ac.cmu.cpe.cpe406.util.Position;
 
 public class LessThan_c extends ComparisonOp_c implements LessThan {
@@ -12,7 +13,7 @@ public class LessThan_c extends ComparisonOp_c implements LessThan {
 	@Override
 	public IRExpr translate() {
 		// TODO Auto-generated method stub
-		return null;
+		return new IRSlt_c(l.translate(), r.translate());
 	}
 
 }

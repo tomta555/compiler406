@@ -1,0 +1,29 @@
+//Function Define & call
+
+def fn():int{
+	return 1;
+}
+
+def fn2(z:int):int{
+	return z+5;
+}
+
+def fn3(z:int,b:bool):bool{
+	if(z == 1) b = true;
+	return b & true;
+}
+
+def fn4(z:int,b:bool):int{
+	if(z == 1) b = true;
+	x:int;
+	x = 0;
+	while(x < 5) {
+		x = x + 1;
+	}
+	return x + z;
+}
+
+x:int;
+x = fn2(1);
+x = x + fn4(1+5,true);
+x = x + fn4( fn2(x), fn3(x+1,true) );

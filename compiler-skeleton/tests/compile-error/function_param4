@@ -1,0 +1,5 @@
+def fn2(z:bool):bool{
+	return !z;
+}
+x:bool;
+x = fn2(5);

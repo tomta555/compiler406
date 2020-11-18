@@ -1,5 +1,6 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
+import th.ac.cmu.cpe.cpe406.types.ArrayType_c;
 import th.ac.cmu.cpe.cpe406.types.BoolType_c;
 import th.ac.cmu.cpe.cpe406.types.IntType_c;
 import th.ac.cmu.cpe.cpe406.types.SymTable;
@@ -22,12 +23,15 @@ public class Param_c extends Node_c implements Param {
 	public Type typeCheck(SymTable sym) throws Exception {
     	Type typeToAdd = null;
     	if (sym.lookup(id.toString()) == null) {
-	    	if (typeNode.typeCheck(sym).isInt()) {
+    		Type t = typeNode.typeCheck(sym);
+	    	if (t.isInt()) {
 	    		typeToAdd = new IntType_c();
-	    	} else if (typeNode.typeCheck(sym).isBool()){
+	    	} else if (t.isBool()){
 	    		typeToAdd = new BoolType_c();
+	    	} else if (t.isArray()){
+	    		typeToAdd = new ArrayType_c(t.getElementType(),t.size());
 	    	} else {
-	    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Primitive type error");
+	    		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Parameter type error");
 	    		// this happen when internal compile error with Unknown primitive type
 	    	}
     	} else {

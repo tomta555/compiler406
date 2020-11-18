@@ -1,0 +1,6 @@
+def fn():int{
+	return 1;
+}
+
+x:int;
+x = fn(1);

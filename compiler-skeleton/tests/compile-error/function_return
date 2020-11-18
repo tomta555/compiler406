@@ -1,0 +1,3 @@
+def fn2(z:bool,x:int,c:bool):bool{
+	return 66;
+}

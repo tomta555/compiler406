@@ -1,6 +1,8 @@
 package th.ac.cmu.cpe.cpe406.ast;
 
 import th.ac.cmu.cpe.cpe406.ir.IRExpr;
+import th.ac.cmu.cpe.cpe406.ir.IRSub_c;
+import th.ac.cmu.cpe.cpe406.ir.IRConst_c;
 import th.ac.cmu.cpe.cpe406.types.IntType_c;
 import th.ac.cmu.cpe.cpe406.types.SymTable;
 import th.ac.cmu.cpe.cpe406.types.Type;
@@ -26,8 +28,7 @@ public class IntegerNeg_c extends Unary_c implements IntegerNeg{
 
 	@Override
 	public IRExpr translate() {
-		// TODO Auto-generated method stub
-		return null;
+		return new IRSub_c( new IRConst_c(0) , expr.translate());
 	}
 
 }

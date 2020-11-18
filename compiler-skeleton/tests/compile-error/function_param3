@@ -1,0 +1,5 @@
+def fn2(z:int):int{
+	return z+5;
+}
+x:int;
+x = fn2(true);
