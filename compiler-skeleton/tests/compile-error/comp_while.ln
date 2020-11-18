@@ -1,0 +1,5 @@
+a:int;
+
+while 45 ;
+
+while a { ;}
