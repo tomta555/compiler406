@@ -1,0 +1,32 @@
+def find_min(a:int[],min:int):int{
+	i:int;
+	i = 0 ;	
+	while(i < 13){
+		if(a[i]<min){
+			min = a[i];	
+		}
+		i=i+1 ;
+	}
+return min;
+}
+def find_max(a:int[],max:int):int{
+	range:int; 
+	range = length(a);
+	i:int; 
+	i = 0 ;	
+	while(i < range){
+		if(a[i]>max){
+			max = a[i];	
+		}
+		i=i+1;
+	}
+return max;
+}
+max:int;
+max = 0;
+min:int;
+min = 999;
+a:int[];
+a[] = {10,2,1,5,1,54,4,1,5,6,1,8,4};
+min = find_min(a,min);
+max = find_max(a,max);
