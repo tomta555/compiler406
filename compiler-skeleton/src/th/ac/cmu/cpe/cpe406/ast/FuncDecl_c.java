@@ -18,6 +18,8 @@ public class FuncDecl_c extends Node_c implements FuncDecl {
     protected List<Param> params;
     protected Block body;
     protected Type type;
+    protected Type retType;
+    protected SymTable funcSym;
 	public FuncDecl_c(Position pos, Id name, List<Param> params, TypeNode returnType, Block body) {
 		super(pos);
         this.name = name;
@@ -27,40 +29,26 @@ public class FuncDecl_c extends Node_c implements FuncDecl {
 	}
 	
 	@Override
-	public Type typeCheck(SymTable sym) throws Exception {
-		this.type = new Unit_c();
-		return this.type;
-	}
-	
-	@Override
 	public FuncDecl body(Block b) {
 		this.body = b;
 		return this;
 	}
 
 	@Override
-	public SymTable BuildSymbolTable(SymTable sym) throws Exception {
+	public Type typeCheck(SymTable sym) throws Exception {
 		
-		Type fn = sym.lookup(name.name());
-		if (fn != null) {
-			throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Redeclaration of function'" + name.name()+"'");
-		}
-		
-		SymTable newSym = new SymTable_c(sym); // Table of body of function
-		
-		List<Type> paramTypes = new LinkedList<>();
-
-		for (Param p : params) {
-			paramTypes.add(p.typeCheck(newSym));
-		}
-
 		Type returnStmtType = null;
+		
 		String returnStmtTypeString = "";
+		
 		String returnTypeString = "";
+		
     	this.returnStmt = body.getLastStatement();
     	
     	if (returnStmt != null) {
-    		returnStmtType = returnStmt.typeCheck(newSym);
+    		
+    		returnStmtType = returnStmt.typeCheck(this.funcSym);
+    		
     		if (returnStmtType.isUnit()) {
     			throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: No return statement in function body");
     		} else if (returnStmtType.isInt()) {
@@ -75,9 +63,9 @@ public class FuncDecl_c extends Node_c implements FuncDecl {
     		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: No return statement in function body");
     	}
     	
-    	if (returnType.typeCheck(sym).isInt()) {
+    	if (retType.isInt()) {
     		returnTypeString = "int";
-    	} else if (returnType.typeCheck(sym).isBool()){
+    	} else if (retType.isBool()){
     		returnTypeString = "bool";
     	} else {
     		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Primitive type error");
@@ -87,15 +75,42 @@ public class FuncDecl_c extends Node_c implements FuncDecl {
     	if (returnTypeString != returnStmtTypeString) {
     		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Return statement must return type " + returnTypeString);
     	}
-    	
-    	Type funcType = new FunctionType_c(paramTypes,returnStmtType);
-    	
-    	sym.add(name.name(), funcType);
-    	
-    	if (!body.typeCheckFunc(newSym).isUnit()) { //Body can't declare variable name that already is an input argument
+		
+    	if (!body.typeCheckFunc(funcSym).isUnit()) { //Body can't declare variable name that already is an input argument
     		throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Some statement in function body is not a valid statement");
     	}
+
+		this.type = new Unit_c();
+		return this.type;
+	}
+
+	@Override
+	public SymTable BuildSymbolTable(SymTable sym) throws Exception {
+		
+		Type fn = sym.lookup(name.name());
+		
+		if (fn != null) {
+			throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Redeclaration of function'" + name.name()+"'");
+		}
+		
+		SymTable newSym = new SymTable_c(null);
+		
+		List<Type> paramTypes = new LinkedList<>();
+
+		for (Param p : params) {
+			paramTypes.add(p.typeCheck(newSym));
+		}
+		
+		this.funcSym = newSym;
+		
+		Type retType = returnType.typeCheck(newSym);
+		
+		this.retType = retType;
+		
+    	Type funcType = new FunctionType_c(paramTypes, retType);
     	
+    	sym.add(name.name(), funcType);
+    	    	
 		return sym;
 	}
 	

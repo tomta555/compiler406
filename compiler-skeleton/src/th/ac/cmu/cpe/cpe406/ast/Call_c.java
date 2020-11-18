@@ -44,8 +44,18 @@ public class Call_c extends Expr_c implements Call {
 			} else if(argType.isBool()) {
 				argStrs.add("bool");
 				argsTypeStr += ",bool";
+			} else if(argType.isArray()) {
+				if (argType.getElementType().isInt()) {
+					argStrs.add("int[]");
+					argsTypeStr += ",int[]";
+				} else if (argType.getElementType().isBool()) {
+					argStrs.add("bool[]");
+					argsTypeStr += ",bool[]";
+				} else {
+					throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Unknown array type");
+				}
 			} else {
-				throw new Exception("Compile error at " + pos.path() + "line:" + pos.line() + "\nError: argument(s) are not type 'int' or 'bool'");
+				throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Unknown argument type");
 			}
 		}
 		
@@ -65,6 +75,16 @@ public class Call_c extends Expr_c implements Call {
 			} else if(paramTypes.get(i).isBool()) {
 				paramStrs.add("bool");
 				paramTypeStr += ",bool";
+			} else if(paramTypes.get(i).isArray()) {
+				if (paramTypes.get(i).getElementType().isInt()) {
+					paramStrs.add("int[]");
+					paramTypeStr += ",int[]";
+				} else if (paramTypes.get(i).getElementType().isBool()) {
+					paramStrs.add("bool[]");
+					paramTypeStr += ",bool[]";
+				} else {
+					throw new Exception("Compile error at " + pos.path() + "\nline:" + pos.line() + "\nError: Unknown array type");
+				}
 			}
 		}
 		

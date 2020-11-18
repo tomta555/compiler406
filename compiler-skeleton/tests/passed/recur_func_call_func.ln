@@ -1,0 +1,12 @@
+def fn2(z:bool):bool{
+	z = fn3(true);
+	return true;
+}
+
+def fn3(z:bool):bool{
+	z = fn2(fn3(true));
+	return true;
+}
+
+s:bool;
+s = fn3(true);

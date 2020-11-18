@@ -8,7 +8,7 @@ d:int;
 
 
 {	a=4;
-	b=6
+	b=6;
 	c=true;
 	b=-4+a;
 	d=a+b;
