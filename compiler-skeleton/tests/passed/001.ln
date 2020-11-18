@@ -1,0 +1,27 @@
+//var decl
+
+a:int;
+
+b:bool;
+
+c:int[];
+
+d:bool[];
+
+aa_bb:int;
+
+aa____bb:bool;
+
+a__________________________________________:int;
+
+aa__bb__:int;
+
+a_b_a_b:int[];
+
+a':bool;
+
+a'':int;
+
+a'_b':bool;
+
+a_'b:int[];

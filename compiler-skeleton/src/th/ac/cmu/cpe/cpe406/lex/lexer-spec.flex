@@ -207,7 +207,7 @@ WhiteSpace = [ \t\f] | {LineTerminator}
 
 /* Identifiers */
 Identifier = [:letter:] ([:jletter:] | [:digit:] | \')*
-
+ 
 /* Integer Literals */
 DecimalNumeral = 0 | [1-9][0-9]*
 
@@ -264,8 +264,6 @@ SignedInteger = [-+]? [0-9]+
     "!="   { return op(sym.NOTEQ);      }
     "&"    { return op(sym.AND);     	}
     "|"    { return op(sym.OR);			}
-    
-	
 
 
 	

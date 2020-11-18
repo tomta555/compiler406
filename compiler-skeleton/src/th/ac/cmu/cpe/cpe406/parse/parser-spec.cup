@@ -190,8 +190,8 @@ nonterminal TypeNode primitive_type;
 //array
 nonterminal TypeNode array_type;
 nonterminal ArrayInit array_init;
-nonterminal Expr variable_initializer;
-nonterminal List<Expr> variable_initializers;
+nonterminal Expr array_element;
+nonterminal List<Expr> array_elements;
 nonterminal Variable array_access;
 
 nonterminal List<Stmt> stmt_list_opt, stmt_list;
@@ -278,23 +278,23 @@ array_type ::=
 
 array_init ::=
                     // ArrayInit
-        IDENTIFIER:n LBRACK  RBRACK EQ LBRACE variable_initializers:a COMMA RBRACE:d {: 
+        IDENTIFIER:n LBRACK  RBRACK EQ LBRACE array_elements:a COMMA RBRACE:d {: 
 			RESULT = new ArrayInit_c(parser.pos(n, d), parser.id(n), a); 
 	:}
-    |   IDENTIFIER:n LBRACK  RBRACK EQ LBRACE variable_initializers:a RBRACE:d {: 
+    |   IDENTIFIER:n LBRACK  RBRACK EQ LBRACE array_elements:a RBRACE:d {: 
 			RESULT = new ArrayInit_c(parser.pos(n, d), parser.id(n), a); 
 	:}
 ;
-variable_initializers ::=
+array_elements ::=
                     // List of Expr
-        variable_initializer:a
+        array_element:a
             {: List<Expr> l = new LinkedList<>();
            l.add(a);
            RESULT = l; :}
-    |   variable_initializers:a COMMA variable_initializer:b
+    |   array_elements:a COMMA array_element:b
             {: RESULT = a; a.add(b); :}
 ;
-variable_initializer ::=
+array_element ::=
                     // Expr
         expr:a
             {: RESULT = a; :}
@@ -706,6 +706,9 @@ neg_expr ::=
     :}
     |LPAREN expr:e RPAREN {:
 		RESULT = e;
+	:}
+	| LENGTH LPAREN IDENTIFIER:id RPAREN {:
+		RESULT = new Length_c(parser.pos(id), parser.id(id));;
 	:}
 	| func_and_array:e {:
 		RESULT = e;
